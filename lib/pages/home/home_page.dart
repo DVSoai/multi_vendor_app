@@ -39,11 +39,13 @@ class HomePage extends StatelessWidget {
                     Heading(title: 'Try Something New', onTap: () {
                       context.pushNamed(RouterName.recommendations);
                     }),
-                  const  FastestFoodList(),
+                    // const RecommendationList(),
+                    const  FastestFoodList(),
                     Heading(title: 'Fastest food closer to you', onTap: () {
                       context.pushNamed(RouterName.allFastestFood);
                     }),
-                   const RecommendationList(),
+
+                    const  FastestFoodList(),
 
                   ],
                 ))),

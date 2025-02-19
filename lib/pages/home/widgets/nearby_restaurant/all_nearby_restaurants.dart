@@ -18,9 +18,9 @@ class AllNearbyRestaurants extends StatelessWidget {
         centerTitle: true,
         title: ReusableText(
             text: 'Nearby Restaurants',
-            style: appStyle(13, kGray, FontWeight.w600)),
+            style: appStyle(13, kOffWhite, FontWeight.w600)),
         elevation: 0,
-        backgroundColor: kOffWhite,
+        backgroundColor: kSecondary,
       ),
       body: BackGroundContainer(
         color: Colors.white,
@@ -35,6 +35,7 @@ class AllNearbyRestaurants extends StatelessWidget {
 
         ),
       ),
-    ));
+    )
+    );
   }
 }
