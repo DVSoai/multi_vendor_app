@@ -92,6 +92,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/category/
+    - assets/images/restaurant/
     - assets/anime/
     - assets/icons/
 

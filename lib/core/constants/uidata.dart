@@ -3,8 +3,7 @@ List<dynamic> categories = [
     "_id": "6537ece708ff5b7de97d0695",
     "title": "Fried Rice",
     "value": "fried_rice",
-    "imageUrl":
-        "assets/images/category/fried_rice.png",
+    "imageUrl": "assets/images/category/fried_rice.png",
     "createdAt": "2023-10-24T16:12:23.571Z",
     "updatedAt": "2023-10-24T16:12:23.571Z",
     "__v": 0
@@ -13,71 +12,63 @@ List<dynamic> categories = [
     "_id": "65310f3381e4d98d60b093c5",
     "title": "Curry",
     "value": "curry",
-    "imageUrl":
-        "assets/images/category/curry.png",
+    "imageUrl": "assets/images/category/curry.png",
     "__v": 0
   },
   {
     "_id": "6531206cbbe4998e90af3feb",
     "title": "Pizza",
     "value": "pizza",
-    "imageUrl":
-        "assets/images/category/pizza.png",
+    "imageUrl": "assets/images/category/pizza.png",
     "__v": 0
   },
   {
     "_id": "6531209dbbe4998e90af3fef",
     "title": "Pasta",
     "value": "pasta",
-    "imageUrl":
-        "assets/images/category/pasta.png",
+    "imageUrl": "assets/images/category/pasta.png",
     "__v": 0
   },
   {
     "_id": "653120babbe4998e90af3ff1",
     "title": "Beverages",
     "value": "beverages",
-    "imageUrl":
-        "assets/images/category/beverages.png",
+    "imageUrl": "assets/images/category/beverages.png",
     "__v": 0
   },
   {
     "_id": "65312084bbe4998e90af3fed",
     "title": "Burgers",
     "value": "burgers",
-    "imageUrl":
-        "assets/images/category/burgers.png",
+    "imageUrl": "assets/images/category/burgers.png",
     "__v": 0
   },
   {
     "_id": "65310efb81e4d98d60b093c3",
     "title": "Chicken",
     "value": "chicken",
-    "imageUrl":
-        "assets/images/category/chicken.png",
+    "imageUrl": "assets/images/category/chicken.png",
     "__v": 0
   },
   {
     "_id": "653120e1bbe4998e90af3ff3",
     "title": "More",
     "value": "more",
-    "imageUrl":
-        "assets/images/category/more.png",
+    "imageUrl": "assets/images/category/more.png",
     "__v": 0
   }
 ];
 
-const restaurants = [
+List<dynamic> restaurants = [
   {
     "_id": "6530ebbcc9e72013e5b65933",
     "title": "Lapisara Eatery",
+    "isAvailable": false,
     "time": "6:00am - 9:00pm",
-    "imageUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
     "owner": "fdfsdfsdfs",
     "code": "41007428",
-    "logoUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
     "rating": 5,
     "ratingCount": "6765",
     "coords": {
@@ -94,12 +85,10 @@ const restaurants = [
     "_id": "6530ea6bc9e72013e5b6592d",
     "title": "Burger King",
     "time": "6:00am - 9:00pm",
-    "imageUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
     "owner": "sjgdsjgfjshhjs",
     "code": "41007428",
-    "logoUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
     "rating": 5,
     "ratingCount": "3278",
     "coords": {
@@ -116,12 +105,10 @@ const restaurants = [
     "_id": "6530eb66c9e72013e5b65931",
     "title": "La Foods",
     "time": "6:00am - 9:00pm",
-    "imageUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
     "owner": "fgdgdfgd",
     "code": "41007428",
-    "logoUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
     "rating": 5,
     "ratingCount": "5666",
     "coords": {
@@ -138,12 +125,154 @@ const restaurants = [
     "_id": "6530eb23c9e72013e5b6592f",
     "title": "Italian Restaurant",
     "time": "6:00am - 9:00pm",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
+    "imageUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl": "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
     "imageUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "assets/images/restaurant/logo_pizza.jpg",
     "owner": "sjgdsjgfjshhjs",
     "code": "41007428",
     "logoUrl":
-        "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp",
+    "assets/images/restaurant/logo_pizza.jpg",
+    "rating": 5,
+    "ratingCount": "3278",
+    "coords": {
+      "id": "2021",
+      "latitude": 37.78557922976825,
+      "longitude": -122.40722000299483,
+      "address": "333 O'Farrell St, San Francisco, CA 94102, United States",
+      "title": "Italian Restaurant",
+      "latitudeDelta": 0.0122,
+      "longitudeDelta": 0.0221
+    }
+  },
+  {
+    "_id": "6530eb23c9e72013e5b6592f",
+    "title": "Italian Restaurant",
+    "time": "6:00am - 9:00pm",
+    "imageUrl":
+    "assets/images/restaurant/logo_pizza.jpg",
+    "owner": "sjgdsjgfjshhjs",
+    "code": "41007428",
+    "logoUrl":
+    "assets/images/restaurant/logo_pizza.jpg",
     "rating": 5,
     "ratingCount": "3278",
     "coords": {
@@ -158,7 +287,7 @@ const restaurants = [
   }
 ];
 
-List <Map<String, dynamic>> foods = [
+List<Map<String, dynamic>> foods = [
   {
     "_id": "65316968f94c6496dc84f3c1",
     "title": "Tiramisu",
@@ -179,9 +308,7 @@ List <Map<String, dynamic>> foods = [
       {"id": 4, "title": "Cocoa", "price": "0.50"},
       {"id": 5, "title": "Sugar", "price": "0.50"}
     ],
-    "imageUrl": 
-      "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp"
-    ,
+    "imageUrl": "assets/images/category/coffee.jpg",
     "__v": 0,
     "category": "6531209dbbe4998e90af3fef",
     "time": "35 min"
@@ -206,9 +333,7 @@ List <Map<String, dynamic>> foods = [
       {"id": 4, "title": "Black Pepper", "price": "0.50"},
       {"id": 5, "title": "Pasta", "price": "3.00"}
     ],
-    "imageUrl": 
-      "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp"
-    ,
+    "imageUrl": "assets/images/category/pasta.png",
     "__v": 2,
     "category": "6531209dbbe4998e90af3fef",
     "time": "20 min"
@@ -233,9 +358,7 @@ List <Map<String, dynamic>> foods = [
       {"id": 4, "title": "Cherry Tomatoes", "price": "1.00"},
       {"id": 5, "title": "Vinaigrette", "price": "0.50"}
     ],
-   "imageUrl": 
-      "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp"
-    ,
+    "imageUrl": "assets/images/category/salat_1.jpg",
     "__v": 0,
     "category": "6531209dbbe4998e90af3fef",
     "time": "55 min"
@@ -258,9 +381,7 @@ List <Map<String, dynamic>> foods = [
       {"id": 2, "title": "Pepperoni", "price": "2.50"},
       {"id": 3, "title": "Ketch up", "price": "0.50"}
     ],
-    "imageUrl": 
-      "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp"
-    ,
+    "imageUrl": "assets/images/category/pizza.png",
     "__v": 0,
     "category": "6531209dbbe4998e90af3fef",
     "time": "30 min"
@@ -285,9 +406,7 @@ List <Map<String, dynamic>> foods = [
       {"id": 4, "title": "Coconut Milk", "price": "1.50"},
       {"id": 5, "title": "Ice", "price": "0.50"}
     ],
-   "imageUrl": 
-      "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp"
-    ,
+    "imageUrl": "assets/images/category/coconut_milk.jpg",
     "__v": 0,
     "category": "6531209dbbe4998e90af3fef",
     "time": "25 min"
@@ -318,9 +437,7 @@ List <Map<String, dynamic>> foods = [
       {"id": 4, "title": "Pork", "price": "3.50"},
       {"id": 5, "title": "Barbecue Sauce", "price": "1.00"}
     ],
-    "imageUrl": 
-      "https://d326fntlu7tb1e.cloudfront.net/uploads/5c2a9ca8-eb07-400b-b8a6-2acfab2a9ee2-image001.webp"
-    ,
+    "imageUrl": "assets/images/category/chicken.png",
     "__v": 0,
     "category": "6531209dbbe4998e90af3fef",
     "time": "45 min"
@@ -389,5 +506,3 @@ const choicesList = [
     "value": "recommended",
   },
 ];
-
-
