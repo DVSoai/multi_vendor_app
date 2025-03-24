@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_vendor_app/data/repositories/food/food_repository.dart';
 import 'package:multi_vendor_app/pages/cart/cart_page.dart';
 import 'package:multi_vendor_app/pages/categories/all_categories.dart';
 import 'package:multi_vendor_app/pages/categories/category_page.dart';
 import 'package:multi_vendor_app/pages/entrypoint/main_page.dart';
 import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
-import 'package:multi_vendor_app/pages/home/home_page.dart';
+import 'package:multi_vendor_app/pages/home/widgets/fastest_food/bloc/food_bloc.dart';
+import 'package:multi_vendor_app/pages/home/widgets/nearby_restaurant/bloc/restaurant_bloc.dart';
 import 'package:multi_vendor_app/pages/profile/profile_page.dart';
 import 'package:multi_vendor_app/pages/search/search_page.dart';
 import 'package:multi_vendor_app/routers/routers_name.dart';
 
+import '../core/di/locator.dart';
+import '../data/repositories/categories/category_repository.dart';
 import '../pages/entrypoint/bloc/tab_index_bloc.dart';
 import '../pages/home/widgets/fastest_food/all_fastest_foods.dart';
 import '../pages/home/widgets/nearby_restaurant/all_nearby_restaurants.dart';
@@ -42,8 +46,12 @@ class AppRouters {
           path: RouterName.categoryScreen,
           name: RouterName.categoryScreen,
           pageBuilder: (context, state) {
+            final String category = state.extra as String;
             return CustomTransitionPage(
-              child: const CategoryPage(),
+              child: BlocProvider(
+                create: (_) => HomeBloc(sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>()),
+                child: CategoryPage(category: category,),
+              ),
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -65,7 +73,10 @@ class AppRouters {
           name: RouterName.allCategoriesScreen,
           pageBuilder: (context, state) {
             return CustomTransitionPage(
-              child: const AllCategories(),
+              child: BlocProvider(
+               create: (_) => HomeBloc(  sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>())..add(const GetListCategoriesAll()),
+                child: const AllCategories(),
+              ),
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -86,20 +97,23 @@ class AppRouters {
         //---------------Bottom Navigation Bar----------------
 
         //---------------HomePage----------------
-        GoRoute(
-            path: RouterName.homeScreen,
-            builder: (context, state) {
-              return BlocProvider(
-                create: (_) => HomeBloc(),
-                child: const HomePage(),
-              );
-            }),
+        // GoRoute(
+        //     path: RouterName.homeScreen,
+        //     builder: (context, state) {
+        //       return BlocProvider(
+        //         create: (_) => HomeBloc(),
+        //         child: const HomePage(),
+        //       );
+        //     }),
         GoRoute(
           path: RouterName.allNearbyRestaurants,
           name: RouterName.allNearbyRestaurants,
           pageBuilder: (context, state) {
             return CustomTransitionPage(
-              child: const AllNearbyRestaurants(),
+              child:BlocProvider(
+                create: (_) => RestaurantBloc(sl<CategoryRepositoryRemote>())..add(const GetNearbyRestaurant()),
+                child: const AllNearbyRestaurants(),
+              ),
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -144,7 +158,10 @@ class AppRouters {
           name: RouterName.allFastestFood,
           pageBuilder: (context, state) {
             return CustomTransitionPage(
-              child: const AllFastestFoods(),
+              child: BlocProvider(
+                create: (_) => FoodBloc(foodRepositoryRemote: sl<FoodRepositoryRemote>())..add(const GetAllFoods()),
+                child: const AllFastestFoods(),
+              ),
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

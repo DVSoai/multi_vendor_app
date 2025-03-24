@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 import 'package:multi_vendor_app/routers/app_router.dart';
 
-void main() {
+import 'core/di/locator.dart';
+import 'core/network/local/global_storage.dart';
+
+
+ServiceLocator dependencyInjector = ServiceLocator();
+Future<void>main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  dependencyInjector.servicesLocator();
+  await Hive.openBox(GlobalStorageKey.globalStorage);
   runApp(const MyApp());
 }
 

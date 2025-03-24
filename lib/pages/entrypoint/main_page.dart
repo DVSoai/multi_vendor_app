@@ -3,11 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:multi_vendor_app/data/repositories/food/food_repository.dart';
 import 'package:multi_vendor_app/pages/cart/cart_page.dart';
+import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
 import 'package:multi_vendor_app/pages/home/home_page.dart';
+import 'package:multi_vendor_app/pages/search/bloc/search_bloc.dart';
 import 'package:multi_vendor_app/pages/search/search_page.dart';
 
 import '../../core/constants/constants.dart';
+import '../../core/di/locator.dart';
+import '../../data/repositories/categories/category_repository.dart';
+import '../../data/repositories/search/search_repository.dart';
 import '../profile/profile_page.dart';
 import 'bloc/tab_index_bloc.dart';
 
@@ -15,8 +21,19 @@ class MainPage extends StatelessWidget {
    MainPage({super.key});
 
    List<Widget> pages = [
-   const  HomePage(),
-     const SearchPage(),
+     BlocProvider(
+       create: (_) => HomeBloc(
+         sl<CategoryRepositoryRemote>(),
+          sl<FoodRepositoryRemote>(),
+       )..add(const GetListCategories()),
+       child: const HomePage(),
+     ),
+   BlocProvider(
+     create: (_) => SearchBloc(
+        sl<SearchRepositoryRemote>(),
+     ),
+     child:   const SearchPage(),
+   ),
      const CartPage(),
      const  ProfilePage(),
    ];

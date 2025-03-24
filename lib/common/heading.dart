@@ -6,10 +6,11 @@ import 'package:multi_vendor_app/common/reusable_text.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 
 class Heading extends StatelessWidget {
-  const Heading({super.key, required this.title, required this.onTap});
+  const Heading({super.key, required this.title, required this.onTap, this.more = true});
 
   final String title;
   final void Function() onTap;
+  final bool more;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +24,14 @@ class Heading extends StatelessWidget {
             child: ReusableText(
                 text: title, style: appStyle(16, kDark, FontWeight.bold)),
           ),
-          GestureDetector(
+        more ==true?  GestureDetector(
             onTap: onTap,
             child: Icon(
               AntDesign.appstore1,
               color: kSecondary,
               size: 20.sp,
             ),
-          )
+          ) : const SizedBox.shrink()
         ],
       ),
     );

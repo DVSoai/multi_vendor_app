@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-
+import 'package:multi_vendor_app/data/models/hook_models/food_model.dart';
 import '../../../../../common/app_style.dart';
 import '../../../../../common/reusable_text.dart';
 import '../../../../../core/constants/constants.dart';
 
 class FoodTitle extends StatelessWidget {
-  const FoodTitle({super.key, required this.food});
-final dynamic food;
+  const FoodTitle({super.key, required this.food, this.color});
+
+  final FoodsModel food;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -22,7 +24,7 @@ final dynamic food;
             height: 70.h,
             width: width,
             decoration: BoxDecoration(
-              color: kOffWhite,
+              color: color ?? kOffWhite,
               borderRadius: BorderRadius.circular(9.r),
             ),
             child: Container(
@@ -37,7 +39,7 @@ final dynamic food;
                         SizedBox(
                           width: 70.w,
                           height: 70.h,
-                          child: Image.asset(food['imageUrl'],
+                          child: Image.network(food.imageUrl,
                               fit: BoxFit.cover),
                         ),
                         Positioned(
@@ -67,10 +69,10 @@ final dynamic food;
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ReusableText(
-                          text: food['title'],
+                          text: food.title,
                           style: appStyle(11, kDark, FontWeight.w400)),
                       ReusableText(
-                          text: "Delivery time : ${food['time']}",
+                          text: "Delivery time : ${food.time}",
                           style: appStyle(11, kGray, FontWeight.w400)),
                       SizedBox(
                         width: width * 0.7,
@@ -78,9 +80,9 @@ final dynamic food;
 
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: food['additives'].length,
+                          itemCount: food.additives.length,
                           itemBuilder: (context,index){
-                            var additive = food['additives'][index];
+                            var additive = food.additives[index];
                             return Container(
                               margin: EdgeInsets.only(right: 5.w),
                               decoration: BoxDecoration(
@@ -90,7 +92,7 @@ final dynamic food;
                               child: Center(
                                 child: Padding(
                                   padding: EdgeInsets.all(2.h),
-                                  child: ReusableText(text: additive['title'],style: appStyle(10, kDark, FontWeight.w400),),
+                                  child: ReusableText(text: additive.title,style: appStyle(10, kDark, FontWeight.w400),),
                                 ),
                               ),
                             );
@@ -113,7 +115,7 @@ final dynamic food;
                 color: kPrimary ,
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              child: Center(child: ReusableText(text:"\$${food['price']}" , style: appStyle(12, kLightWhite, FontWeight.bold))),
+              child: Center(child: ReusableText(text:"\$${food.price}" , style: appStyle(12, kLightWhite, FontWeight.bold))),
             ),
           ),
 
