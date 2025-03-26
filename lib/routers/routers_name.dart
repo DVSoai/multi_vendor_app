@@ -10,4 +10,6 @@ class RouterName {
   static const allNearbyRestaurants = '/allNearbyRestaurants';
   static const recommendations = '/recommendations';
   static const allFastestFood = '/allFastestFood';
+  static const String foodPage = '/foodPage';
+  static const String restaurantPage = '/restaurantPage';
 }

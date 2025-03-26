@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_vendor_app/common/app_style.dart';
 import 'package:multi_vendor_app/common/reusable_text.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 import 'package:multi_vendor_app/data/models/hook_models/restaurant_model.dart';
+import 'package:multi_vendor_app/pages/categories/all_categories.dart';
+
+import '../../../../../routers/routers_name.dart';
 
 class RestaurantTitle extends StatelessWidget {
   const RestaurantTitle({super.key, required this.restaurant});
@@ -14,7 +18,9 @@ class RestaurantTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.push(RouterName.restaurantPage, extra: restaurant);
+      },
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [

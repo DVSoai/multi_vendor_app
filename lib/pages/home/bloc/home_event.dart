@@ -61,10 +61,12 @@ class GetFoods extends HomeEvent {
 class GetFoodsAll extends HomeEvent {
   final String code;
   final String category;
+  final String title;
   const GetFoodsAll(
   {
     required this.code,
     required this.category,
+    required this.title,
   });
 }
 

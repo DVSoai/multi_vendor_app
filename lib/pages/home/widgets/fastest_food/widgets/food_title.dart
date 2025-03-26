@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_vendor_app/data/models/hook_models/food_model.dart';
+import 'package:multi_vendor_app/pages/categories/all_categories.dart';
+import 'package:multi_vendor_app/pages/food/food_page.dart';
 import '../../../../../common/app_style.dart';
 import '../../../../../common/reusable_text.dart';
 import '../../../../../core/constants/constants.dart';
+import '../../../../../routers/routers_name.dart';
 
 class FoodTitle extends StatelessWidget {
   const FoodTitle({super.key, required this.food, this.color});
@@ -15,7 +19,9 @@ class FoodTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.push(RouterName.foodPage, extra: food);
+      },
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
@@ -39,7 +45,7 @@ class FoodTitle extends StatelessWidget {
                         SizedBox(
                           width: 70.w,
                           height: 70.h,
-                          child: Image.network(food.imageUrl,
+                          child: Image.network(food.imageUrl[0],
                               fit: BoxFit.cover),
                         ),
                         Positioned(

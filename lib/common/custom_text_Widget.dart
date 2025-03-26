@@ -4,7 +4,7 @@ import 'package:multi_vendor_app/common/app_style.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 
 class CustomTextWidget extends StatelessWidget {
-  const CustomTextWidget({super.key,  this.keyboardType,  this.controller, this.onEditingComplete, this.obscureText, this.suffixIcon, this.validator, this.prefixIcon, this.hintText});
+  const CustomTextWidget({super.key,  this.keyboardType,  this.controller, this.onEditingComplete, this.obscureText, this.suffixIcon, this.validator, this.prefixIcon, this.hintText,this.maxLines=1});
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final void Function()? onEditingComplete;
@@ -13,6 +13,7 @@ class CustomTextWidget extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
   final String? hintText;
+  final int maxLines ;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class CustomTextWidget extends StatelessWidget {
         cursorHeight: 20.h,
         style: appStyle(11, kDark, FontWeight.normal) ,
         validator: validator,
+        maxLines: maxLines,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintStyle: appStyle(14, kDark, FontWeight.normal),

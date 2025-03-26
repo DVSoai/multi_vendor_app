@@ -2,20 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_vendor_app/data/repositories/food/food_repository.dart';
+import 'package:multi_vendor_app/data/repositories/restaurant/restaurant_repository.dart';
 import 'package:multi_vendor_app/pages/cart/cart_page.dart';
 import 'package:multi_vendor_app/pages/categories/all_categories.dart';
 import 'package:multi_vendor_app/pages/categories/category_page.dart';
 import 'package:multi_vendor_app/pages/entrypoint/main_page.dart';
+import 'package:multi_vendor_app/pages/food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
 import 'package:multi_vendor_app/pages/home/widgets/fastest_food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/pages/home/widgets/nearby_restaurant/bloc/restaurant_bloc.dart';
 import 'package:multi_vendor_app/pages/profile/profile_page.dart';
+import 'package:multi_vendor_app/pages/restaurant/bloc/restaurant_page_bloc.dart';
+import 'package:multi_vendor_app/pages/restaurant/restaurant_page.dart';
 import 'package:multi_vendor_app/pages/search/search_page.dart';
 import 'package:multi_vendor_app/routers/routers_name.dart';
 
 import '../core/di/locator.dart';
+import '../data/models/hook_models/food_model.dart';
+import '../data/models/hook_models/restaurant_model.dart';
 import '../data/repositories/categories/category_repository.dart';
 import '../pages/entrypoint/bloc/tab_index_bloc.dart';
+import '../pages/food/food_page.dart';
 import '../pages/home/widgets/fastest_food/all_fastest_foods.dart';
 import '../pages/home/widgets/nearby_restaurant/all_nearby_restaurants.dart';
 import '../pages/home/widgets/recommendations/recommendations.dart';
@@ -46,11 +53,13 @@ class AppRouters {
           path: RouterName.categoryScreen,
           name: RouterName.categoryScreen,
           pageBuilder: (context, state) {
-            final String category = state.extra as String;
+            final extra = state.extra as Map;
+            final String category = extra['id'].toString();
+            final String title = extra['title'].toString();
             return CustomTransitionPage(
               child: BlocProvider(
                 create: (_) => HomeBloc(sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>()),
-                child: CategoryPage(category: category,),
+                child: CategoryPage(category: category,title: title,),
               ),
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
@@ -92,6 +101,35 @@ class AppRouters {
               },
             );
           },
+        ),
+
+
+        //---------------Food----------------
+        GoRoute(
+          path: RouterName.foodPage,
+          name: RouterName.foodPage,
+          builder: (context,state){
+            final food = state.extra as FoodsModel;
+          return  BlocProvider(
+              create: (_) => FoodPageBloc(sl<RestaurantRepositoryRemote>())..add(FetchRestaurantList(code: food.restaurant)),
+              child:  FoodPage(food:food,),
+            );
+          }
+        ),
+
+
+        //---------------Restaurant----------------
+
+        GoRoute(
+            path: RouterName.restaurantPage,
+            name: RouterName.restaurantPage,
+            builder: (context, state) {
+              final restaurantModel = state.extra as RestaurantModel?;
+              return BlocProvider(
+                create: (_) => RestaurantPageBloc(),
+                child: RestaurantPage(restaurantModel:restaurantModel ,),
+              );
+            }
         ),
 
         //---------------Bottom Navigation Bar----------------

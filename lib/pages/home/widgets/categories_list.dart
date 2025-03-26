@@ -47,7 +47,7 @@ class CategoriesList extends StatelessWidget {
                        context.read<HomeBloc>().add(UpdateCategoryAndTitle(
                            category: category.id, title: category.title));
                        context.read<HomeBloc>().add(GetFoodsAll(
-                           code: '41007428', category: category.id));
+                           code: '41007428', category: category.id,title: category.title));
                      }
                    },
                    child: Container(

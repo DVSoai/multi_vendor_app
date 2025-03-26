@@ -78,7 +78,7 @@ class HomeBloc extends Bloc<HomeEvent,HomeState>{
   try{
     emit(state.copyWith(isLoading: true));
     final result = await _foodRepositoryRemote.getFoodByCategory(category: event.category,code: event.code);
-    emit(state.copyWith(listFoodsCategory: result),
+    emit(state.copyWith(listFoodsCategory: result,title: event.title, category: event.category),
     );
     emit(state.copyWith(isLoading: false));
 

@@ -20,7 +20,7 @@ class FoodsModel {
   final String description;
   final double price;
   final List<Additive> additives;
-  final String imageUrl;
+  final List<String> imageUrl;
 
   FoodsModel({
     required this.id,
@@ -55,7 +55,7 @@ class FoodsModel {
     description: json["description"],
     price: json["price"]?.toDouble(),
     additives: List<Additive>.from(json["additives"].map((x) => Additive.fromJson(x))),
-    imageUrl: json["imageUrl"],
+    imageUrl: List<String>.from(json["imageUrl"].map((x) => x ?? '')),
   );
 
   Map<String, dynamic> toJson() => {
@@ -73,7 +73,7 @@ class FoodsModel {
     "description": description,
     "price": price,
     "additives": List<dynamic>.from(additives.map((x) => x.toJson())),
-    "imageUrl": imageUrl,
+    "imageUrl": List<dynamic>.from(imageUrl.map((x) => x)),
   };
 }
 

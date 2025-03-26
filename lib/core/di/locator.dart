@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multi_vendor_app/data/repositories/categories/category_repository.dart';
+import 'package:multi_vendor_app/data/repositories/restaurant/restaurant_repository.dart';
 import 'package:multi_vendor_app/data/repositories/search/search_repository.dart';
 
 import '../../data/repositories/food/food_repository.dart';
@@ -28,5 +29,6 @@ class ServiceLocator {
     sl.registerFactory<SearchRepositoryRemote>(
             () => SearchRepositoryRemote(sl<ApiClient>())
     );
+    sl.registerFactory<RestaurantRepositoryRemote>(()=> RestaurantRepositoryRemote(sl<ApiClient>()));
   }
 }

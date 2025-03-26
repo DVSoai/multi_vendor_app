@@ -43,12 +43,10 @@ class AllCategories extends StatelessWidget {
                       var category = categories[i];
                       return ListTile(
                         onTap: (){
-                          debugPrint('CategoryTrue: ${state.listFoodsCategory == null}');
-                         if(state.listFoodsCategory== null){
-                           context.read<HomeBloc>().add(GetFoodsAll(
-                               code: '41007428', category: category.id));
-                         }
-                          context.pushNamed(RouterName.categoryScreen,extra: category.id,);
+                          context.pushNamed(RouterName.categoryScreen,extra: {
+                            'id': category.id,
+                            'title': category.title
+                          },);
                         },
                         leading: CircleAvatar(
                           radius: 18.r,
