@@ -20,7 +20,6 @@ class FoodPage extends StatefulWidget {
 
   final FoodsModel food;
 
-
   @override
   State<FoodPage> createState() => _FoodPageState();
 }
@@ -34,6 +33,7 @@ class _FoodPageState extends State<FoodPage> {
     super.initState();
     pageController = PageController();
     preferenceController = TextEditingController();
+    context.read<FoodPageBloc>().add(LoadAdditives(widget.food.additives));
     // context.read<FoodPageBloc>().add(FetchRestaurantList(code: widget.food.restaurant));
   }
 
@@ -53,9 +53,8 @@ class _FoodPageState extends State<FoodPage> {
           padding: EdgeInsets.zero,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(30.r)
-              ),
+              borderRadius:
+                  BorderRadius.only(bottomRight: Radius.circular(30.r)),
               child: Stack(
                 children: [
                   SizedBox(
@@ -63,8 +62,9 @@ class _FoodPageState extends State<FoodPage> {
                     child: PageView.builder(
                       controller: pageController,
                       onPageChanged: (index) {
-                        context.read<FoodPageBloc>().add(
-                            ChangeCurrentPage(currentPage: index));
+                        context
+                            .read<FoodPageBloc>()
+                            .add(ChangeCurrentPage(currentPage: index));
                       },
                       itemCount: widget.food.imageUrl.length,
                       itemBuilder: (context, index) {
@@ -86,8 +86,8 @@ class _FoodPageState extends State<FoodPage> {
                       padding: const EdgeInsets.only(left: 12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                            widget.food.imageUrl.length, (index) {
+                        children:
+                            List.generate(widget.food.imageUrl.length, (index) {
                           return Container(
                             margin: EdgeInsets.all(4.h),
                             width: 10.w,
@@ -103,7 +103,6 @@ class _FoodPageState extends State<FoodPage> {
                       ),
                     ),
                   ),
-
                   Positioned(
                     top: 40.h,
                     left: 12,
@@ -118,7 +117,6 @@ class _FoodPageState extends State<FoodPage> {
                       ),
                     ),
                   ),
-
                   Positioned(
                     bottom: 10,
                     right: 12.w,
@@ -127,11 +125,10 @@ class _FoodPageState extends State<FoodPage> {
                       btnWidth: 130.w,
                       onPressed: () async {
                         final RestaurantModel? argument = state.restaurant;
-                        context.push(
-                            RouterName.restaurantPage, extra: argument);
+                        context.push(RouterName.restaurantPage,
+                            extra: argument);
                       },
                     ),
-
                   )
                 ],
               ),
@@ -145,14 +142,14 @@ class _FoodPageState extends State<FoodPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ReusableText(text: widget.food.title,
+                      ReusableText(
+                          text: widget.food.title,
                           style: appStyle(18, kDark, FontWeight.w600)),
                       ReusableText(
-                        text: "\$${(widget.food.price * state.count!)
-                            .toStringAsFixed(2)}",
+                        text:
+                            "\$${((widget.food.price + state.totalPrice!) * state.count!).toStringAsFixed(2)}",
                         style: appStyle(18, kPrimary, FontWeight.w600),
                       )
-
                     ],
                   ),
                   Gap(5.h),
@@ -180,7 +177,8 @@ class _FoodPageState extends State<FoodPage> {
                           child: Center(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 6.w),
-                              child: ReusableText(text: tag,
+                              child: ReusableText(
+                                  text: tag,
                                   style: appStyle(13, kWhite, FontWeight.w400)),
                             ),
                           ),
@@ -189,61 +187,68 @@ class _FoodPageState extends State<FoodPage> {
                     ),
                   ),
                   Gap(15.h),
-                  ReusableText(text: 'Additives and Toppings',
+                  ReusableText(
+                      text: 'Additives and Toppings',
                       style: appStyle(18, kDark, FontWeight.w600)),
                   Gap(10.h),
                   Column(
-                    children: List.generate(widget.food.additives.length, (i) {
-                      final additive = widget.food.additives[i];
+                    children: List.generate(state.additivesList!.length, (i) {
+                      final additive =state.additivesList![i];
                       return CheckboxListTile(
                           contentPadding: EdgeInsets.zero,
                           visualDensity: VisualDensity.compact,
                           activeColor: kPrimary,
-                          value: true,
+                          value: additive.isChecked,
                           tristate: false,
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ReusableText(text: additive.title,
+                              ReusableText(
+                                  text: additive.title,
                                   style: appStyle(14, kDark, FontWeight.w400)),
                               Gap(5.w),
-                              ReusableText(text: "\$${additive.price}",
-                                  style: appStyle(
-                                      14, kPrimary, FontWeight.w400))
+                              ReusableText(
+                                  text: "\$${additive.price}",
+                                  style:
+                                      appStyle(14, kPrimary, FontWeight.w400))
                             ],
                           ),
                           onChanged: (bool? value) {
-                            debugPrint('value: $value');
-                          }
-                      );
+                            context.read<FoodPageBloc>().add(ToggleAdditive(i, value!));
+                            // context.read<FoodPageBloc>().getTotalPrice();
+                            debugPrint('Additive: ${additive.isChecked}');
+                          });
                     }),
                   ),
                   Gap(15.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ReusableText(text: 'Quantity',
+                      ReusableText(
+                          text: 'Quantity',
                           style: appStyle(18, kDark, FontWeight.bold)),
                       Gap(5.w),
                       Row(
                         children: [
                           GestureDetector(
                             onTap: () {
-                              context.read<FoodPageBloc>().add(
-                                  IncrementCountEvent(1));
+                              context
+                                  .read<FoodPageBloc>()
+                                  .add(const IncrementCountEvent(1));
                             },
                             child: const Icon(AntDesign.pluscircleo),
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 6.w),
-
-                            child: ReusableText(text: "${state.count}",
+                            child: ReusableText(
+                                text: "${state.count}",
                                 style: appStyle(14, kDark, FontWeight.w600)),
                           ),
                           GestureDetector(
                             onTap: () {
-                              context.read<FoodPageBloc>().add(
-                                  DecrementCountEvent(1));
+                              context
+                                  .read<FoodPageBloc>()
+                                  .add(const DecrementCountEvent(1));
                             },
                             child: const Icon(AntDesign.minuscircleo),
                           ),
@@ -252,7 +257,8 @@ class _FoodPageState extends State<FoodPage> {
                     ],
                   ),
                   Gap(15.h),
-                  ReusableText(text: 'Preferences',
+                  ReusableText(
+                      text: 'Preferences',
                       style: appStyle(18, kDark, FontWeight.w600)),
                   Gap(10.h),
                   SizedBox(
@@ -277,12 +283,12 @@ class _FoodPageState extends State<FoodPage> {
                           onTap: () {
                             showVerificationSheet(context);
                           },
-
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
-                            child: ReusableText(text: "Place Order",
-                                style: appStyle(
-                                    18, kLightWhite, FontWeight.w600)),
+                            child: ReusableText(
+                                text: "Place Order",
+                                style:
+                                    appStyle(18, kLightWhite, FontWeight.w600)),
                           ),
                         ),
                         GestureDetector(
@@ -291,10 +297,11 @@ class _FoodPageState extends State<FoodPage> {
                             backgroundColor: kSecondary,
                             radius: 20.r,
                             child: const Icon(
-                              Ionicons.cart, color: kLightWhite,),
+                              Ionicons.cart,
+                              color: kLightWhite,
+                            ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -311,12 +318,61 @@ class _FoodPageState extends State<FoodPage> {
   Future<dynamic> showVerificationSheet(BuildContext context) {
     return showModalBottomSheet(
         context: context,
-        builder:(BuildContext context){
+        showDragHandle: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
           return Container(
-            height: 500.h,
+            height: 560.h,
+            decoration: const BoxDecoration(
+              color: kLightWhite,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              image: DecorationImage(
+                image: AssetImage('assets/images/restaurant_bk.png'),
+                fit: BoxFit.fill,
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(8.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Gap(10.h),
+                  ReusableText(
+                      text: 'Verify Your Phone Number',
+                      style: appStyle(18, kPrimary, FontWeight.w600)),
+                  SizedBox(
+                    height: 280.h,
+                    child: Column(
+                      children: List.generate(verificationReasons.length, (i) {
+                        return ListTile(
+                          leading: const Icon(
+                            Icons.check_circle_outline,
+                            color: kPrimary,
+                          ),
+                          title: Text(
+                            verificationReasons[i],
+                            textAlign: TextAlign.justify,
+                            style: appStyle(13, kGrayLight, FontWeight.normal),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  Gap(10.h),
+                  
+                  CustomButton(
+                    text: "Verify Phone Number",
+                    btnHeight: 40.h,
+                    onPressed: (){
+                      context.push(RouterName.phoneVerification);
+                    },
+                  )
+                ],
+              ),
+            ),
           );
-        }
-    );
+        });
   }
 
 }

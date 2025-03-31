@@ -12,4 +12,10 @@ class RouterName {
   static const allFastestFood = '/allFastestFood';
   static const String foodPage = '/foodPage';
   static const String restaurantPage = '/restaurantPage';
+  static const String phoneVerification = '/phoneVerification';
+  static const String ratingPage = '/ratingPage';
+  static const String directionsPage = '/directionsPage';
+  static const String registerPage = '/registerPage';
+  static const String loginPage = '/loginPage';
+  static const String loginRedirect = '/loginRedirect';
 }

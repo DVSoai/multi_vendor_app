@@ -72,6 +72,7 @@ dependencies:
   build_runner: ^2.4.13
   json_serializable: ^6.9.0
   gap: ^3.0.1
+  pinput: ^5.0.1
 
 dev_dependencies:
   flutter_test:

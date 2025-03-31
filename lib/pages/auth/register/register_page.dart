@@ -3,21 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
-import 'package:multi_vendor_app/common/app_style.dart';
-import 'package:multi_vendor_app/common/back_ground_container.dart';
-import 'package:multi_vendor_app/common/custom_button.dart';
-import 'package:multi_vendor_app/common/email_text_field.dart';
-import 'package:multi_vendor_app/common/reusable_text.dart';
-import 'package:multi_vendor_app/core/constants/constants.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+import '../../../common/app_style.dart';
+import '../../../common/back_ground_container.dart';
+import '../../../common/custom_button.dart';
+import '../../../common/email_text_field.dart';
+import '../../../common/reusable_text.dart';
+import '../../../core/constants/constants.dart';
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<AuthPage> createState() => _AuthPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _passwordController = TextEditingController();
 
