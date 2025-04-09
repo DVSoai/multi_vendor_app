@@ -5,7 +5,7 @@ import 'package:multi_vendor_app/common/app_style.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 
 class EmailTextField extends StatelessWidget {
-  const EmailTextField({super.key, this.onEditingComplete, this.keyboardType, this.controller, this.initialValue, this.hintText, this.prefixIcon, this.focusNode});
+  const EmailTextField({super.key, this.onEditingComplete, this.keyboardType, this.controller, this.initialValue, this.hintText, this.prefixIcon, this.focusNode,this.validator});
   final void Function()? onEditingComplete;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
@@ -13,9 +13,11 @@ class EmailTextField extends StatelessWidget {
   final String? hintText;
   final Widget? prefixIcon;
   final FocusNode? focusNode;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
+
     return TextFormField(
       cursorColor: kDark,
       textInputAction: TextInputAction.next,
@@ -24,15 +26,7 @@ class EmailTextField extends StatelessWidget {
       initialValue: initialValue,
       controller: controller,
       focusNode:focusNode ,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please enter your email';
-        }
-        if (!value.contains('@')) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
+      validator: validator,
       style: appStyle(12, kGray, FontWeight.normal),
       decoration: InputDecoration(
         hintText: hintText,

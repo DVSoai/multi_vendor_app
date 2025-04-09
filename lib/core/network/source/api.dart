@@ -16,14 +16,14 @@ class ApiClient {
   ApiClient(this._dio, this._globalStorage) {
     _dio.options = BaseOptions(
       baseUrl:
-      // 'http://192.168.1.15:6013',
-      'http://192.168.2.19:6013', // Set your base URL here
+      'http://192.168.1.15:6013',
+      // 'http://192.168.2.37:6013', // Set your base URL here
       connectTimeout: const Duration(seconds: 10), // Timeout for connecting
       receiveTimeout: const Duration(seconds: 10), // Timeout for receiving data
     );
     // Configure Dio interceptors
     _dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-      final token = _globalStorage.accessToken;
+      final token = _globalStorage.userToken;
       options.headers['Content-Type'] = 'application/json; charset=UTF-8';
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';

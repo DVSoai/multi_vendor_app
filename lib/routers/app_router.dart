@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_vendor_app/data/repositories/auth/register/register_repository.dart';
 import 'package:multi_vendor_app/data/repositories/food/food_repository.dart';
 import 'package:multi_vendor_app/data/repositories/restaurant/restaurant_repository.dart';
 import 'package:multi_vendor_app/pages/auth/phone_verification/phone_verification_page.dart';
+import 'package:multi_vendor_app/pages/auth/register/bloc/register_bloc.dart';
 import 'package:multi_vendor_app/pages/auth/register/register_page.dart';
 import 'package:multi_vendor_app/pages/auth/widgets/login_redirect.dart';
 import 'package:multi_vendor_app/pages/cart/cart_page.dart';
@@ -22,30 +24,43 @@ import 'package:multi_vendor_app/pages/search/search_page.dart';
 import 'package:multi_vendor_app/routers/routers_name.dart';
 
 import '../core/di/locator.dart';
+import '../core/network/local/global_storage.dart';
 import '../data/models/hook_models/food_model.dart';
 import '../data/models/hook_models/restaurant_model.dart';
+import '../data/repositories/auth/email_verification/email_verification_repository.dart';
+import '../data/repositories/auth/login/login_repository.dart';
+import '../data/repositories/auth/phone_verification/phone_verification_repository.dart';
 import '../data/repositories/categories/category_repository.dart';
 import '../pages/auth/bloc/login_bloc.dart';
+import '../pages/auth/login/email_verification/bloc/email_verification_bloc.dart';
+import '../pages/auth/login/email_verification/email_verification.dart';
 import '../pages/auth/login/login_page.dart';
+import '../pages/auth/phone_verification/bloc/phone_verification_bloc.dart';
 import '../pages/entrypoint/bloc/tab_index_bloc.dart';
 import '../pages/food/food_page.dart';
 import '../pages/home/widgets/fastest_food/all_fastest_foods.dart';
 import '../pages/home/widgets/nearby_restaurant/all_nearby_restaurants.dart';
 import '../pages/home/widgets/recommendations/recommendations.dart';
-import '../pages/onboarding/on_boarding_page.dart';
 import '../pages/rating/rating_page.dart';
+import '../pages/splash/splash_screen.dart';
 
 class AppRouters {
   static final GoRouter router = GoRouter(
       initialLocation: RouterName.rootScreen,
       routes: [
-        GoRoute(
-          path: RouterName.onBoarding,
-          builder: (context, state) => const OnBoardingPage(),
-        ),
         //-----------------------Root-----------------------
+        // GoRoute(
+        //   path: RouterName.rootScreen,
+        //   builder: (context, state) {
+        //     return BlocProvider(
+        //       create: (context) => TabIndexBloc(),
+        //       child: MainPage(),
+        //     );
+        //   },
+        // ),
+
         GoRoute(
-          path: RouterName.rootScreen,
+          path: RouterName.mainPage,
           builder: (context, state) {
             return BlocProvider(
               create: (context) => TabIndexBloc(),
@@ -54,13 +69,41 @@ class AppRouters {
           },
         ),
 
+        GoRoute(
+          path: RouterName.emailVerification,
+          name: RouterName.emailVerification,
+          builder: (context,state){
+            return BlocProvider(
+              create: (context) => EmailVerificationBloc(
+                sl<EmailVerificationRepositoryRemote>(),
+                sl<GlobalStorage>(),
+              ),
+              child: const EmailVerification(),
+            );
+          }
+        ),
+
+        GoRoute(
+          path: RouterName.rootScreen,
+          name: RouterName.rootScreen,
+          builder: (context,state){
+            return const SplashScreen();
+          }
+        ),
+
         //---------------Auth----------------
 
         GoRoute(
           path: RouterName.phoneVerification,
           name: RouterName.phoneVerification,
           builder: (context,state){
-            return const  PhoneVerificationPage();
+            return BlocProvider(
+              create: (context) => PhoneVerificationBloc(
+                sl<PhoneVerificationRepositoryRemote>(),
+                sl<GlobalStorage>(),
+              ),
+              child: const PhoneVerificationPage(),
+            );
           }
         ),
 
@@ -178,7 +221,10 @@ class AppRouters {
           name: RouterName.loginPage,
           builder: (context,state){
             return BlocProvider(
-              create: (_) => LoginBloc(),
+              create: (_) => LoginBloc(
+                loginRepositoryRemote: sl<LoginRepositoryRemote>(),
+                globalStorage: sl<GlobalStorage>()
+              ),
               child: const LoginPage(),
             );
           }
@@ -187,7 +233,10 @@ class AppRouters {
           path: RouterName.registerPage,
           name: RouterName.registerPage,
           builder: (context,state){
-            return const RegisterPage();
+            return BlocProvider(
+              create: (_) => RegisterBloc(sl<RegisterRepositoryRemote>()),
+              child: const RegisterPage(),
+            );
           }
         ),
 

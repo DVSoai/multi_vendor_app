@@ -4,13 +4,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:multi_vendor_app/common/app_style.dart';
+import 'package:multi_vendor_app/common/reusable_text.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 
 class UserInfoWidget extends StatelessWidget {
-  const UserInfoWidget({super.key});
+  const UserInfoWidget({super.key, required this.username, required this.email, required this.image});
+
+  final String username,email,image;
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('user image $image');
+    debugPrint('username $username');
+    debugPrint('email $email');
+
     return Container(
       height: height * 0.06,
       width: width,
@@ -24,30 +31,33 @@ class UserInfoWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: 35.h,
                       width: 35.w,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset('assets/images/user.jpg',fit: BoxFit.cover,),
+                      child: CircleAvatar(
+                        backgroundColor: kGrayLight,
+                        backgroundImage: NetworkImage(
+                          image
+                        ),
                       ),
                     ),
                     Gap(10.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('UserName',style: appStyle(13, kDark, FontWeight.w400),),
-                        Text('MarshalDev@gmail.com',style: appStyle(11, kGray, FontWeight.w400),),
-                      ],
+                    Padding(
+                      padding:  EdgeInsets.all(4.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                         ReusableText(text: username, style: appStyle(12, kGray, FontWeight.w600)),
+                          ReusableText(text: email, style: appStyle(10, kGray, FontWeight.normal))
+                        ],
 
+                      ),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding:  EdgeInsets.all(4.h),
                   child: GestureDetector(
                     onTap: (){
                     },

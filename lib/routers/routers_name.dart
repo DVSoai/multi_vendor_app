@@ -18,4 +18,6 @@ class RouterName {
   static const String registerPage = '/registerPage';
   static const String loginPage = '/loginPage';
   static const String loginRedirect = '/loginRedirect';
+  static const String mainPage = '/mainPage';
+  static const String emailVerification = '/emailVerification';
 }

@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:multi_vendor_app/common/app_style.dart';
+import 'package:multi_vendor_app/common/reusable_text.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 import 'package:multi_vendor_app/pages/auth/login/login_page.dart';
 import 'package:multi_vendor_app/routers/routers_name.dart';
@@ -27,13 +29,7 @@ class _LoginRedirectState extends State<LoginRedirect> {
         centerTitle: true,
         elevation: 1,
         backgroundColor: kLightWhite,
-        title: const Text('Please login to access this page'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_outlined),
-          onPressed: () {
-           context.pop();
-          },
-        ),
+        title: ReusableText(text: 'Please login to access this page', style: appStyle(12, kDark, FontWeight.normal)),
       ),
       body: CustomContainer(
         color: Colors.white,

@@ -5,9 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 
 class CustomContainer extends StatelessWidget {
-   CustomContainer({super.key, required this.containerContent, this.color});
+   CustomContainer({super.key, required this.containerContent, this.color,this.isBottomNavigation = false});
    Widget containerContent;
    Color? color;
+   final bool isBottomNavigation;
 
   @override
   Widget build(BuildContext context) {

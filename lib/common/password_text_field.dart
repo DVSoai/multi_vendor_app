@@ -38,6 +38,9 @@ class PasswordTextField extends StatelessWidget {
         if (value!.isEmpty) {
           return 'Please enter valid Password';
         }
+        if(value.length < 8){
+          return 'Password > 8 ky tu';
+        }
         return null;
       },
       style: appStyle(12, kGray, FontWeight.normal),
