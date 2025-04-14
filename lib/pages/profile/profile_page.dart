@@ -84,7 +84,9 @@ class ProfilePage extends StatelessWidget {
                 ProfileTitleWidget(
                   title: 'Shipping Address',
                   icon: SimpleLineIcons.location_pin,
-                  onTap: () {},
+                  onTap: () {
+                    context.push(RouterName.shippingAddress);
+                  },
                 ),
                 ProfileTitleWidget(
                   title: 'Service center',
@@ -110,7 +112,7 @@ class ProfilePage extends StatelessWidget {
               text: 'Log Out',
               onPressed: () {
                 sl<GlobalStorage>().clearUser();
-                context.go(RouterName.loginPage);
+                context.go(RouterName.mainPage);
               },
               btnColor: kRed,
             ),

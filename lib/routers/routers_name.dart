@@ -20,4 +20,5 @@ class RouterName {
   static const String loginRedirect = '/loginRedirect';
   static const String mainPage = '/mainPage';
   static const String emailVerification = '/emailVerification';
+  static const String shippingAddress = '/shippingAddress';
 }

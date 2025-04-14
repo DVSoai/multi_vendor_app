@@ -5,6 +5,7 @@ import 'package:multi_vendor_app/common/app_style.dart';
 import 'package:multi_vendor_app/common/phone_verification.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 import 'package:multi_vendor_app/pages/auth/phone_verification/bloc/phone_verification_bloc.dart';
+import 'package:multi_vendor_app/routers/routers_name.dart';
 import '../../../common/app_loader.dart';
 
 class PhoneVerificationPage extends StatefulWidget {
@@ -35,9 +36,17 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
 
         if (state.isSuccess) {
           // Điều hướng đến trang chính hoặc bất kỳ đâu sau khi xác thực thành công
-          context.pop();
+          context.go(RouterName.mainPage);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Xác thực thành công!'),
+              backgroundColor: Colors.blue,
+            ),
+          );
 
         } else if (state.isFailed) {
+          // Hiển thị thông báo lỗi nếu xác thực thất bại
+          debugPrint('Error: ${state.errorMessage}');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage),

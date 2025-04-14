@@ -17,6 +17,7 @@ import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
 import 'package:multi_vendor_app/pages/home/widgets/fastest_food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/pages/home/widgets/nearby_restaurant/bloc/restaurant_bloc.dart';
 import 'package:multi_vendor_app/pages/profile/profile_page.dart';
+import 'package:multi_vendor_app/pages/profile/shipping/bloc/shipping_bloc.dart';
 import 'package:multi_vendor_app/pages/restaurant/bloc/restaurant_page_bloc.dart';
 import 'package:multi_vendor_app/pages/restaurant/restaurant_page.dart';
 import 'package:multi_vendor_app/pages/restaurant/widgets/directions_page.dart';
@@ -41,6 +42,8 @@ import '../pages/food/food_page.dart';
 import '../pages/home/widgets/fastest_food/all_fastest_foods.dart';
 import '../pages/home/widgets/nearby_restaurant/all_nearby_restaurants.dart';
 import '../pages/home/widgets/recommendations/recommendations.dart';
+import '../pages/profile/bloc/profile_bloc.dart';
+import '../pages/profile/shipping/shiping_address.dart';
 import '../pages/rating/rating_page.dart';
 import '../pages/splash/splash_screen.dart';
 
@@ -335,11 +338,36 @@ class AppRouters {
             builder: (context, state) {
               return const CartPage();
             }),
-        GoRoute(
-            path: RouterName.profileScreen,
-            builder: (context, state) {
-              return const ProfilePage();
-            }),
+
+        //-----------------------Profile-----------------------
+
+        ShellRoute(
+          builder: (context, state, child) {
+           return MultiBlocProvider(
+               providers: [
+                  BlocProvider(
+                    create: (context) => ProfileBloc(
+                    ),
+                  ),
+
+           ], child: Scaffold(
+             body: child,
+           )
+           );
+          },
+          routes: [
+            GoRoute(
+                path: RouterName.shippingAddress,
+                name: RouterName.shippingAddress,
+                builder: (context,state){
+                  return const ShippingAddress();
+                }
+            ),
+          ]
+        ),
+
+
+        //---------------Rating----------------
 
         GoRoute(
           path: RouterName.ratingPage,

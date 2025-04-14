@@ -15,6 +15,10 @@ import 'package:multi_vendor_app/data/models/hook_models/restaurant_model.dart';
 import 'package:multi_vendor_app/pages/food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/routers/routers_name.dart';
 
+import '../../core/di/locator.dart';
+import '../../core/network/local/global_storage.dart';
+import '../auth/widgets/login_redirect.dart';
+
 class FoodPage extends StatefulWidget {
   const FoodPage({super.key, required this.food});
 
@@ -27,6 +31,8 @@ class FoodPage extends StatefulWidget {
 class _FoodPageState extends State<FoodPage> {
   late PageController pageController;
   late TextEditingController preferenceController;
+  final token = sl<GlobalStorage>().userToken;
+  final user = sl<GlobalStorage>().user;
 
   @override
   void initState() {
@@ -281,7 +287,13 @@ class _FoodPageState extends State<FoodPage> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            showVerificationSheet(context);
+                            if(user == null){
+                              context.go(RouterName.loginRedirect);
+                            }else if(user?.phoneVerification == false) {
+                              showVerificationSheet(context);
+                            }else {
+                              debugPrint('Add to cart');
+                            }
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -365,7 +377,7 @@ class _FoodPageState extends State<FoodPage> {
                     text: "Verify Phone Number",
                     btnHeight: 40.h,
                     onPressed: (){
-                      context.push(RouterName.phoneVerification);
+                    context.push(RouterName.phoneVerification);
                     },
                   )
                 ],

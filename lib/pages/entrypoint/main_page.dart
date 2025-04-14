@@ -8,6 +8,7 @@ import 'package:multi_vendor_app/pages/auth/widgets/login_redirect.dart';
 import 'package:multi_vendor_app/pages/cart/cart_page.dart';
 import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
 import 'package:multi_vendor_app/pages/home/home_page.dart';
+import 'package:multi_vendor_app/pages/profile/bloc/profile_bloc.dart';
 import 'package:multi_vendor_app/pages/search/bloc/search_bloc.dart';
 import 'package:multi_vendor_app/pages/search/search_page.dart';
 
@@ -32,11 +33,19 @@ class MainPage extends StatelessWidget {
         final token = sl<GlobalStorage>().userToken;
         final user = sl<GlobalStorage>().user;
         List<Widget> pages = [
-          BlocProvider(
-            create: (_) => HomeBloc(
-              sl<CategoryRepositoryRemote>(),
-              sl<FoodRepositoryRemote>(),
-            )..add(const GetListCategories()),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => HomeBloc(
+                  sl<CategoryRepositoryRemote>(),
+                  sl<FoodRepositoryRemote>(),
+                )..add(const GetListCategories()),
+              ),
+              BlocProvider(
+                lazy: false,
+                create: (_) => ProfileBloc(),
+              )
+            ],
             child: const HomePage(),
           ),
           BlocProvider(
@@ -66,7 +75,10 @@ class MainPage extends StatelessWidget {
                       ),
                       child: const EmailVerification(),
                     )
-                  : const ProfilePage(),
+                  : BlocProvider(
+                      create: (context) => ProfileBloc(),
+                      child: const ProfilePage(),
+                    ),
         ];
         return Scaffold(
           body: Stack(

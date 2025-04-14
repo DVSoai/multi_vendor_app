@@ -27,7 +27,7 @@ class EmailTextField extends StatelessWidget {
       controller: controller,
       focusNode:focusNode ,
       validator: validator,
-      style: appStyle(12, kGray, FontWeight.normal),
+      style: appStyle(14, kDark, FontWeight.normal),
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon:  prefixIcon,

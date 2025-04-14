@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:multi_vendor_app/common/app_style.dart';
 import 'package:multi_vendor_app/common/reusable_text.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
 
+import '../pages/profile/bloc/profile_bloc.dart';
 
-class CustomAppBar extends StatelessWidget {
+
+class CustomAppBar extends StatefulWidget {
   const CustomAppBar({super.key});
 
+  @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,12 +51,16 @@ class CustomAppBar extends StatelessWidget {
                  ReusableText(text: 'Deliver to', style: appStyle(13, kSecondary, FontWeight.w600)),
                   SizedBox(
                     width: width*0.65,
-                    child: Text(
-                      "Tot Dong, Chuong My, Ha Noi",
-                      overflow: TextOverflow.ellipsis,
-                      style: appStyle(11, kGrayLight, FontWeight.normal),
-                    ),
-                    
+                    child: BlocBuilder<ProfileBloc,ProfileState>(
+                        builder:(context,state){
+                          return Text(
+                           state.address.isNotEmpty ? state.address : 'Current Location',
+                            overflow: TextOverflow.ellipsis,
+                            style: appStyle(11, kGrayLight, FontWeight.normal),
+                          );
+                        }
+                    )
+
                   ),
 
 
@@ -66,5 +86,56 @@ String getTimeOfDay(){
   } else{
     return '🌙';
   }
+}
 
+Future<void> _determinePosition(BuildContext context) async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled don't continue
+    // accessing the position and request users of the
+    // App to enable the location services.
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+  _getCurrentLocation(context);
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+
+}
+
+Future<void>_getCurrentLocation(BuildContext context) async {
+
+  Position position = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(
+    accuracy: LocationAccuracy.best,
+    distanceFilter: 10,
+  ));
+  // Use the position data
+  LatLng latLng = LatLng(position.latitude, position.longitude);
+  context.read<ProfileBloc>().add(UpdatePositionEvent(latLng));
+  context.read<ProfileBloc>().add(GetUserAddressEvent(latLng));
+  // For example, print the latitude and longitude
+  print(latLng);
 }
