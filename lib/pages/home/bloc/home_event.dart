@@ -69,4 +69,7 @@ class GetFoodsAll extends HomeEvent {
     required this.title,
   });
 }
+class LoadDefaultAddress extends HomeEvent {
+  const LoadDefaultAddress();
+}
 

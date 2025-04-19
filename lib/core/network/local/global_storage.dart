@@ -14,6 +14,7 @@ class GlobalStorageKey {
   static const isLoggedIn = 'is_logged_in';
   static const verification = 'verification';
   static const phoneVerification = 'phoneVerification';
+  static const address = 'addresses';
 }
 
 abstract class GlobalStorage {
@@ -43,8 +44,6 @@ abstract class GlobalStorage {
   //   required String? token,
   //   required String? userId,
   // });
-  //
-  // Future<void> clearAuthenticationState();
 }
 
 class GlobalStorageImpl implements GlobalStorage {

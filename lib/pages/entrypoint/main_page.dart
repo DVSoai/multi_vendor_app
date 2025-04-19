@@ -15,11 +15,14 @@ import 'package:multi_vendor_app/pages/search/search_page.dart';
 import '../../core/constants/constants.dart';
 import '../../core/di/locator.dart';
 import '../../core/network/local/global_storage.dart';
+import '../../data/repositories/address/addresses_repository.dart';
 import '../../data/repositories/auth/email_verification/email_verification_repository.dart';
+import '../../data/repositories/cart/cart_repository.dart';
 import '../../data/repositories/categories/category_repository.dart';
 import '../../data/repositories/search/search_repository.dart';
 import '../auth/login/email_verification/bloc/email_verification_bloc.dart';
 import '../auth/login/email_verification/email_verification.dart';
+import '../cart/bloc/cart_bloc.dart';
 import '../profile/profile_page.dart';
 import 'bloc/tab_index_bloc.dart';
 
@@ -39,47 +42,63 @@ class MainPage extends StatelessWidget {
                 create: (_) => HomeBloc(
                   sl<CategoryRepositoryRemote>(),
                   sl<FoodRepositoryRemote>(),
+                  sl<AddressesRepositoryRemote>(),
                 )..add(const GetListCategories()),
               ),
               BlocProvider(
                 lazy: false,
                 create: (_) => ProfileBloc(),
-              )
+              ),
+              // ✅ Dùng lại CartBloc đã được cung cấp từ ShellRoute
+              BlocProvider.value(
+                value: context.read<CartBloc>(),
+              ),
             ],
             child: const HomePage(),
           ),
-          BlocProvider(
-            create: (_) => SearchBloc(
-              sl<SearchRepositoryRemote>(),
-            ),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => SearchBloc(
+                  sl<SearchRepositoryRemote>(),
+                ),
+              ),
+              BlocProvider.value(
+                value: context.read<CartBloc>(),
+              ),
+            ],
             child: const SearchPage(),
           ),
           token == null
               ? const LoginRedirect()
               : user != null && user.verification == false
-                  ? BlocProvider(
-                      create: (context) => EmailVerificationBloc(
-                        sl<EmailVerificationRepositoryRemote>(),
-                        sl<GlobalStorage>(),
-                      ),
-                      child: const EmailVerification(),
-                    )
-                  : const CartPage(),
+              ? BlocProvider(
+            create: (context) => EmailVerificationBloc(
+              sl<EmailVerificationRepositoryRemote>(),
+              sl<GlobalStorage>(),
+            ),
+            child: const EmailVerification(),
+          )
+              : BlocProvider.value(
+            value: context.read<CartBloc>(),
+            child: const CartPage(),
+          ),
           token == null || user != null && user.verification == false
               ? const LoginRedirect()
               : user != null && user.verification == false
-                  ? BlocProvider(
-                      create: (context) => EmailVerificationBloc(
-                        sl<EmailVerificationRepositoryRemote>(),
-                        sl<GlobalStorage>(),
-                      ),
-                      child: const EmailVerification(),
-                    )
-                  : BlocProvider(
-                      create: (context) => ProfileBloc(),
-                      child: const ProfilePage(),
-                    ),
+              ? BlocProvider(
+            create: (context) => EmailVerificationBloc(
+              sl<EmailVerificationRepositoryRemote>(),
+              sl<GlobalStorage>(),
+            ),
+            child: const EmailVerification(),
+          )
+              : BlocProvider(
+            create: (context) => ProfileBloc(),
+            child: const ProfilePage(),
+          ),
         ];
+
         return Scaffold(
           body: Stack(
             children: [
@@ -112,10 +131,15 @@ class MainPage extends StatelessWidget {
                           icon: Icon(Icons.search),
                           label: 'Search',
                         ),
-                        const BottomNavigationBarItem(
-                          icon: Badge(
-                            label: Text('3'),
-                            child: Icon(FontAwesome.opencart),
+                        BottomNavigationBarItem(
+                          icon: BlocBuilder<CartBloc, CartState>(
+                            builder: (context, state) {
+                              final count = state.listCart.length;
+                              return Badge(
+                                label: Text('$count'),
+                                child: const Icon(FontAwesome.opencart),
+                              );
+                            },
                           ),
                           label: 'Cart',
                         ),

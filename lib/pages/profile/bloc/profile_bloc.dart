@@ -17,8 +17,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(const ProfileState()) {
     on<UpdatePositionEvent>(_onUpdatePositionEvent);
     on<GetUserAddressEvent>(_onGetUserAddressEvent);
-    on<ChangeTabEvent>(_onChangeTabEvent);
-    on<CheckDefaultAddressEvent>(_onCheckDefaultAddressEvent);
+
   }
 
   void _onUpdatePositionEvent(
@@ -74,12 +73,4 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  void _onChangeTabEvent(
-      ChangeTabEvent event, Emitter<ProfileState> emit) {
-    emit(state.copyWith(tabIndex: event.tabIndex));
-  }
-  void _onCheckDefaultAddressEvent(
-      CheckDefaultAddressEvent event, Emitter<ProfileState> emit) {
-    emit(state.copyWith(isDefault: event.isDefault));
-  }
 }

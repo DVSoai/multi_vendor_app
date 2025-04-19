@@ -16,8 +16,8 @@ class ApiClient {
   ApiClient(this._dio, this._globalStorage) {
     _dio.options = BaseOptions(
       baseUrl:
-      // 'http://192.168.1.15:6013',
-      'http://192.168.2.51:6013', // Set your base URL here
+      // 'http://192.168.1.5:6013',
+      'http://192.168.2.31:6013', // Set your base URL
       connectTimeout: const Duration(seconds: 10), // Timeout for connecting
       receiveTimeout: const Duration(seconds: 10), // Timeout for receiving data
     );
@@ -29,23 +29,23 @@ class ApiClient {
         options.headers['Authorization'] = 'Bearer $token';
       }
       // if (kDebugMode) {
-      print('Request: ${options.method} ${options.path}');
-      print('Request Headers: ${options.headers}');
-      print('Request Data: ${options.data}');
+      debugPrint('Request: ${options.method} ${options.path}');
+      debugPrint('Request Headers: ${options.headers}');
+      debugPrint('Request Data: ${options.data}');
       // }
 
       return handler.next(options);
     }, onResponse: (response, handler) {
       if (kDebugMode) {
-        print('Response Status Code: ${response.statusCode}');
-        print('Response Data: ${response.data}');
+        debugPrint('Response Status Code: ${response.statusCode}');
+        debugPrint('Response Data: ${response.data}');
       }
 
       return handler.next(response);
     }, onError: (DioException error, handler) {
       if (kDebugMode) {
-        print("Error intercepted: ${error.response?.statusCode}");
-        print("Error response: ${error.response?.data}");
+        debugPrint("Error intercepted: ${error.response?.statusCode}");
+        debugPrint("Error response: ${error.response?.data}");
       }
       handler.next(error);
     }));
@@ -73,6 +73,7 @@ class ApiClient {
         case ApiType.post:
           response = await _dio.post(path,
               data: data,
+
               queryParameters: queryParameters,
 
               // options: Options(headers: headers)

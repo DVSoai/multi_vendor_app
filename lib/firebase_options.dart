@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBrkDv2YPNISPAACiN466mbAeta4q905wU',
-    appId: '1:937502403229:android:8b3f108ef127a4880c0274',
+    appId: '1:937502403229:android:762b8780480806570c0274',
     messagingSenderId: '937502403229',
     projectId: 'multivenderapp',
     storageBucket: 'multivenderapp.firebasestorage.app',
@@ -59,11 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDX_GNcM7wlwEVUJiiGP5BN2xGTEZPhkmQ',
-    appId: '1:937502403229:ios:721451a2107a7f920c0274',
+    appId: '1:937502403229:ios:b2eee17ff7c90ab00c0274',
     messagingSenderId: '937502403229',
     projectId: 'multivenderapp',
     storageBucket: 'multivenderapp.firebasestorage.app',
-    iosClientId: '937502403229-kk96hkrmnvhpbvpi54gof0g55nuk4cka.apps.googleusercontent.com',
-    iosBundleId: 'com.example.multiVendorApp',
+    androidClientId: '937502403229-gkgl0h4biscr6bh2dnhad29a8jc3n9ec.apps.googleusercontent.com',
+    iosClientId: '937502403229-q04nvkob9303cdnn7018ucmqujkkh0qt.apps.googleusercontent.com',
+    iosBundleId: 'com.marshalfood.app',
   );
+
 }

@@ -11,7 +11,9 @@ class HomeState extends Equatable {
   final List<FoodsModel> listFoods;
   final List<FoodsModel>? listFoodsCategory;
 
-  HomeState({
+  final AddressModel? defaultAddress;
+
+  const HomeState({
     required this.category,
     required this.title,
     required this.listCategory,
@@ -19,17 +21,22 @@ class HomeState extends Equatable {
     required this.listRestaurant,
     required this.listFoods,
     required this.listFoodsCategory,
+    required this.defaultAddress
+
 });
 
   factory HomeState.initial() {
-    return HomeState(
+    return const HomeState(
       category: '',
       title: '',
-      listCategory: const [],
+      listCategory: [],
       isLoading: false,
-      listRestaurant: const [],
-      listFoods: const [],
-      listFoodsCategory: const [],
+      listRestaurant: [],
+      listFoods: [],
+      listFoodsCategory: [],
+      defaultAddress: null,
+
+
     );
   }
 
@@ -41,6 +48,8 @@ class HomeState extends Equatable {
     List<RestaurantModel>? listRestaurant,
     List<FoodsModel>? listFoods,
     List<FoodsModel>? listFoodsCategory,
+    AddressModel? defaultAddress,
+
   }) {
     return HomeState(
       category: category ?? this.category,
@@ -50,9 +59,10 @@ class HomeState extends Equatable {
       listRestaurant: listRestaurant ?? this.listRestaurant,
       listFoods: listFoods ?? this.listFoods,
       listFoodsCategory: listFoodsCategory ?? this.listFoodsCategory,
+      defaultAddress: defaultAddress ?? this.defaultAddress,
     );
   }
 
   @override
-  List<Object> get props => [category, title, listCategory, isLoading, listRestaurant, listFoods, listFoodsCategory??[]];
+  List<Object?> get props => [category, title, listCategory, isLoading, listRestaurant, listFoods, listFoodsCategory, defaultAddress];
 }

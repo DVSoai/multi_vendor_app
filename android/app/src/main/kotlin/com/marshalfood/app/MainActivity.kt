@@ -1,4 +1,4 @@
-package com.example.multi_vendor_app
+package com.marshalfood.app
 
 import io.flutter.embedding.android.FlutterActivity
 

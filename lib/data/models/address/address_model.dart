@@ -17,14 +17,15 @@ class AddressModel {
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
-      addressLine1: json['addressLine1'] ,
-      postalCode: json['postalCode'] ,
-      addressModelDefault: json['default'],
-      deliveryInstructions: json['deliveryInstructions'],
-      latitude: (json['latitude'] ).toDouble(),
-      longitude: (json['longitude']).toDouble(),
+      addressLine1: json['addressLine1'] ?? '',
+      postalCode: json['postalCode'] ?? '',
+      addressModelDefault: json['default'] ?? false,
+      deliveryInstructions: json['deliveryInstructions'] ?? '',
+      latitude: (json['latitude'] ?? 0.0).toDouble(),
+      longitude: (json['longitude'] ?? 0.0).toDouble(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'addressLine1': addressLine1,

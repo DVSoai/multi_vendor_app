@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:multi_vendor_app/common/app_style.dart';
 import 'package:multi_vendor_app/common/reusable_text.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
+import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
 
 import '../pages/profile/bloc/profile_bloc.dart';
 
@@ -23,6 +24,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   void initState() {
     super.initState();
     _determinePosition(context);
+   context.read<HomeBloc>().add(const LoadDefaultAddress());
   }
   @override
   Widget build(BuildContext context) {
@@ -51,10 +53,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                  ReusableText(text: 'Deliver to', style: appStyle(13, kSecondary, FontWeight.w600)),
                   SizedBox(
                     width: width*0.65,
-                    child: BlocBuilder<ProfileBloc,ProfileState>(
+                    child: BlocBuilder<HomeBloc,HomeState>(
                         builder:(context,state){
                           return Text(
-                           state.address.isNotEmpty ? state.address : 'Current Location',
+                           state.defaultAddress != null ?  state.defaultAddress!.addressLine1 : 'No Address',
                             overflow: TextOverflow.ellipsis,
                             style: appStyle(11, kGrayLight, FontWeight.normal),
                           );

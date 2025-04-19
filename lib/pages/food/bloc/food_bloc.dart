@@ -21,6 +21,8 @@ class FoodPageBloc extends Bloc<FoodPageEvent, FoodPageState> {
     on<LoadAdditives>(_onLoadAdditives);
     on<ToggleAdditive>(_onToggleAdditive);
 
+    // on<GetCartAdditives>(_onGetCartAdditives);
+
   }
 
   void _onChangeCurrentPage(ChangeCurrentPage event, Emitter<FoodPageState> emit) {
@@ -88,28 +90,8 @@ class FoodPageBloc extends Bloc<FoodPageEvent, FoodPageState> {
     emit(state.copyWith(additivesList: updatedAdditives,totalPrice: total,additiveTitle: ads)); // Emit state mới
   }
 
-  // List<String>getList(){
-  //   List<String> ads = [];
-  //   for(var additive in state.additivesList!){
-  //     if(additive.isChecked && !ads.contains(additive.title)){
-  //       ads.add(additive.title);
-  //     }else if(!additive.isChecked && ads.contains(additive.title)){
-  //       ads.remove(additive.title);
-  //     }
-  //   }
-  //   return ads;
-  // }
 
-  // double getTotalPrice(){
-  //   double total = 0;
-  //   for(var additive in state.additivesList!){
-  //     if(additive.isChecked){
-  //       total += double.parse(additive.price) ?? 0.0;
-  //     }
-  //   }
-  //   print('Total: $total');
-  //   return total;
-  // }
+
 
 
 }

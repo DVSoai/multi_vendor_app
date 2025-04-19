@@ -21,4 +21,6 @@ class RouterName {
   static const String mainPage = '/mainPage';
   static const String emailVerification = '/emailVerification';
   static const String shippingAddress = '/shippingAddress';
+  static const String addAddress = '/addAddress';
+  static const String orderPage = '/orderPage';
 }

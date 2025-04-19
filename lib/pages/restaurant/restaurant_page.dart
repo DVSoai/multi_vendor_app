@@ -31,7 +31,6 @@ class RestaurantPage extends StatefulWidget {
 class _RestaurantPageState extends State<RestaurantPage> with TickerProviderStateMixin {
 
   late TabController  _tabController;
-  late  bool _explore = true;
 
   @override
   initState() {
@@ -78,7 +77,7 @@ class _RestaurantPageState extends State<RestaurantPage> with TickerProviderStat
                       children: [
                         GestureDetector(
                           onTap: () {
-                            context.pop();
+                           context.go(RouterName.mainPage);
                           },
                          child: const Icon(
                            Ionicons.chevron_back_circle,

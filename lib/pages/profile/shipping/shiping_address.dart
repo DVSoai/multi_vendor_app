@@ -8,15 +8,15 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:multi_vendor_app/common/app_loader.dart';
 import 'package:multi_vendor_app/common/back_ground_container.dart';
 import 'package:multi_vendor_app/common/custom_button.dart';
 import 'package:multi_vendor_app/common/email_text_field.dart';
 import 'package:multi_vendor_app/core/constants/constants.dart';
-import 'package:multi_vendor_app/data/models/address/address_model.dart';
 import 'package:multi_vendor_app/pages/profile/bloc/profile_bloc.dart';
+import 'package:multi_vendor_app/pages/profile/shipping/bloc/shipping_bloc.dart';
 
 import '../../../common/app_style.dart';
-
 
 class ShippingAddress extends StatefulWidget {
   const ShippingAddress({super.key});
@@ -56,6 +56,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       setState(() {});
     });
   }
+
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () async {
@@ -84,6 +85,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
       }
     });
   }
+
   void _getPlaceDetails(String placeId) async {
     final url =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$googleApiKey';
@@ -165,241 +167,270 @@ class _ShippingAddressState extends State<ShippingAddress> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context,state){
-        return  Scaffold(
-            appBar: AppBar(
-              leading: Padding(
-                padding: EdgeInsets.only(right: 0.w),
-                child: state.tabIndex == 0
-                    ? IconButton(
-                  icon: const Icon(AntDesign.closecircleo,color: kRed,),
-                  onPressed: () {
-                    context.pop();
-                  },
-                )
-                    : IconButton(
-                  icon: const Icon(
-                    AntDesign.leftcircleo,
-                    color: kDark,
-                  ),
-                  onPressed: () {
-                    context
-                        .read<ProfileBloc>()
-                        .add(const ChangeTabEvent(0));
-                    _pageController.previousPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeIn);
-                  },
+    return BlocListener<ShippingBloc, ShippingState>(
+      listener: (context, state) {
+        if (state.isLoading == true) {
+          return AppLoader.show(context);
+        } else {
+          AppLoader.hide();
+        }
+        if (state.isSuccess == true) {
+         context.pop(true);
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Thêm địa chỉ thành công ')));
+        } else if (state.isError == true) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        }
+      },
+      child: BlocBuilder<ShippingBloc, ShippingState>(
+        builder: (context, state) {
+          return Scaffold(
+              appBar: AppBar(
+                leading: Padding(
+                  padding: EdgeInsets.only(right: 0.w),
+                  child: state.tabIndex == 0
+                      ? IconButton(
+                          icon: const Icon(
+                            AntDesign.closecircleo,
+                            color: kRed,
+                          ),
+                          onPressed: () {
+                            context.pop();
+                          },
+                        )
+                      : IconButton(
+                          icon: const Icon(
+                            AntDesign.leftcircleo,
+                            color: kDark,
+                          ),
+                          onPressed: () {
+                            context
+                                .read<ShippingBloc>()
+                                .add(const ChangeTabEvent(0));
+                            _pageController.previousPage(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
+                          },
+                        ),
                 ),
-              ),
-              title: const Text('Shipping Address'),
-              centerTitle: true,
-              backgroundColor:kOffWhite,
-              iconTheme: const IconThemeData(color: Colors.black),
-              elevation: 0,
-              actions: [
-                state.tabIndex == 1
-                    ? const SizedBox.shrink()
-                    : Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: IconButton(
-                    onPressed: () {
-                      context
-                          .read<ProfileBloc>()
-                          .add(const ChangeTabEvent(1));
-                      _pageController.nextPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeIn);
-                    },
-                    icon: const Icon(
-                      AntDesign.rightcircleo,
-                      color: kDark,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            body: SizedBox(
-              width: width,
-              height: height,
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                pageSnapping: false,
-                onPageChanged: (index) {
-                  // Handle page change if needed
-                  _pageController.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                children: [
-                  Stack(children: [
-                    GoogleMap(
-                      onMapCreated: (GoogleMapController controller) {
-                        _mapController = controller;
-                        _isMapReady = true;
-                      },
-                      initialCameraPosition: CameraPosition(
-                        target: _selectedPosition ??
-                            const LatLng(20.97096063081741, 105.8683156594634),
-                        zoom: 15,
-                      ),
-                      markers: _selectedPosition == null
-                          ? {
-                        Marker(
-                          markerId: const MarkerId('selected-location'),
-                          position: const LatLng(20.9714, 105.8643),
-                          draggable: true,
-                          onDragEnd: (LatLng position) {
-                            context
-                                .read<ProfileBloc>()
-                                .add(GetUserAddressEvent(position));
-                            setState(() {
-                              _selectedPosition = position;
-                            });
-                            debugPrint('Address: ${state.address}');
-                          },
-                        ),
-                      }
-                          : {
-                        Marker(
-                          markerId: const MarkerId('selected-location'),
-                          position: _selectedPosition!,
-                          draggable: true,
-                          onDragEnd: (LatLng position) {
-                            context
-                                .read<ProfileBloc>()
-                                .add(GetUserAddressEvent(position));
-                            setState(() {
-                              _selectedPosition = position;
-                            });
-                            debugPrint('Address: ${state.address}');
-                          },
-                        ),
-                      },
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          color:kOffWhite,
-                          child: TextField(
-                            controller: _searchController,
-                            onChanged: _onSearchChanged,
-                            decoration: const InputDecoration(
-                              hintText: 'Search for your address ...',
+                title: const Text('Shipping Address'),
+                centerTitle: true,
+                backgroundColor: kOffWhite,
+                iconTheme: const IconThemeData(color: Colors.black),
+                elevation: 0,
+                actions: [
+                  state.tabIndex == 1
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: IconButton(
+                            onPressed: () {
+                              context
+                                  .read<ShippingBloc>()
+                                  .add(const ChangeTabEvent(1));
+                              _pageController.nextPage(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
+                            },
+                            icon: const Icon(
+                              AntDesign.rightcircleo,
+                              color: kDark,
                             ),
                           ),
-                        ),
-                        _placeList.isEmpty
-                            ? const SizedBox.shrink()
-                            : Expanded(
-                          child: ListView(
-                            children:
-                            List.generate(_placeList.length, (index) {
-                              return Container(
-                                color: Colors.white,
-                                child: ListTile(
-                                  visualDensity: VisualDensity.compact,
-                                  title: Text(
-                                    _placeList[index]['description'],
-                                    // style: appStyle(
-                                    //     14, kGrayLight, FontWeight.w400),
-                                  ),
-                                  onTap: () async {
-                                    debugPrint('Place ID: ${_placeList[index]['place_id']}');
-                                    _getPlaceDetails(
-                                        _placeList[index]['place_id']);
-                                    _selectedPlace.add(_placeList[index]);
-                                  },
-                                ),
-                              );
-                            }),
-                          ),
                         )
-                      ],
-                    ),
-                  ]),
-                  BackGroundContainer(
-                    color: kLightWhite,
-                    child: ListView(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      children: [
-                        Gap(30.h),
-                        EmailTextField(
-                          controller: _searchController,
-                          hintText: 'Address',
-                          keyboardType: TextInputType.number,
-                          prefixIcon: const Icon(
-                            Ionicons.location_sharp,
-                            color: kDark,
-                          ),
-                        ),
-                        Gap(15.h),
-                        EmailTextField(
-                          controller: _postalCode,
-                          hintText: 'Postal Code',
-                          keyboardType: TextInputType.number,
-                          prefixIcon: const Icon(
-                            Ionicons.location_sharp,
-                            color: kDark,
-                          ),
-                        ),
-                        Gap(8.h),
-                        Text(
-                          maxLines: 2,
-                          "Lưu ý: Một số khu vực không có mã bưu chính trong Google Maps.\n Bạn có thể tìm mã bưu chính trên các trang web như Tổng công ty Bưu điện Việt Nam.",
-                          style: appStyle(12, kGrayLight, FontWeight.w400),
-                        ),
-                        Gap(15.h),
-                        EmailTextField(
-                          controller: _instructions,
-                          hintText: 'Delivery Instructions',
-                          keyboardType: TextInputType.number,
-                          prefixIcon: const Icon(
-                            Ionicons.add_circle,
-                            color: kDark,
-                          ),
-                        ),
-                        CheckboxListTile(
-                          checkColor: kOffWhite,
-                          contentPadding: EdgeInsets.zero,
-                          activeColor: kPrimary,
-                          value: state.isDefault,
-                          onChanged: (value) {
-                            context.read<ProfileBloc>().add(
-                                CheckDefaultAddressEvent(value ?? false));
-                          },
-                          title: const Text('Set as default address'),
-                          controlAffinity: ListTileControlAffinity.leading,
-                        ),
-                        Gap(15.h),
-                        CustomButton(
-                          onPressed: (){
-                            if(_searchController.text.isNotEmpty && _postalCode.text.isNotEmpty && _instructions.text.isNotEmpty){
-                              var model = AddressModel(
-                                  addressLine1: _searchController.text,
-                                  postalCode: _postalCode.text,
-                                  addressModelDefault: state.isDefault,
-                                  deliveryInstructions: _instructions.text,
-                                  latitude: _selectedPosition!.latitude,
-                                  longitude: _selectedPosition!.longitude
-                              );
-                            }
-                          },
-                          btnHeight: 45.h,
-                          text: 'S UB M I T',
-                        )
-                      ],
-                    ),
-                  )
                 ],
               ),
-            ));
-      },
+              body: SizedBox(
+                width: width,
+                height: height,
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  pageSnapping: false,
+                  onPageChanged: (index) {
+                    // Handle page change if needed
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  children: [
+                    Stack(children: [
+                      GoogleMap(
+                        onMapCreated: (GoogleMapController controller) {
+                          _mapController = controller;
+                          _isMapReady = true;
+                        },
+                        initialCameraPosition: CameraPosition(
+                          target: _selectedPosition ??
+                              const LatLng(
+                                  20.97096063081741, 105.8683156594634),
+                          zoom: 15,
+                        ),
+                        markers: _selectedPosition == null
+                            ? {
+                                Marker(
+                                  markerId: const MarkerId('selected-location'),
+                                  position: const LatLng(20.9714, 105.8643),
+                                  draggable: true,
+                                  onDragEnd: (LatLng position) {
+                                    context
+                                        .read<ProfileBloc>()
+                                        .add(GetUserAddressEvent(position));
+                                    setState(() {
+                                      _selectedPosition = position;
+                                    });
+                                  },
+                                ),
+                              }
+                            : {
+                                Marker(
+                                  markerId: const MarkerId('selected-location'),
+                                  position: _selectedPosition!,
+                                  draggable: true,
+                                  onDragEnd: (LatLng position) {
+                                    context
+                                        .read<ProfileBloc>()
+                                        .add(GetUserAddressEvent(position));
+                                    setState(() {
+                                      _selectedPosition = position;
+                                    });
+                                  },
+                                ),
+                              },
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            color: kOffWhite,
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: _onSearchChanged,
+                              decoration: const InputDecoration(
+                                hintText: 'Search for your address ...',
+                              ),
+                            ),
+                          ),
+                          _placeList.isEmpty
+                              ? const SizedBox.shrink()
+                              : Expanded(
+                                  child: ListView(
+                                    children: List.generate(_placeList.length,
+                                        (index) {
+                                      return Container(
+                                        color: Colors.white,
+                                        child: ListTile(
+                                          visualDensity: VisualDensity.compact,
+                                          title: Text(
+                                            _placeList[index]['description'],
+                                            // style: appStyle(
+                                            //     14, kGrayLight, FontWeight.w400),
+                                          ),
+                                          onTap: () async {
+                                            debugPrint(
+                                                'Place ID: ${_placeList[index]['place_id']}');
+                                            _getPlaceDetails(
+                                                _placeList[index]['place_id']);
+                                            _selectedPlace
+                                                .add(_placeList[index]);
+                                          },
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                )
+                        ],
+                      ),
+                    ]),
+                    BackGroundContainer(
+                      color: kLightWhite,
+                      child: ListView(
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        children: [
+                          Gap(30.h),
+                          EmailTextField(
+                            controller: _searchController,
+                            hintText: 'Address',
+                            keyboardType: TextInputType.number,
+                            prefixIcon: const Icon(
+                              Ionicons.location_sharp,
+                              color: kDark,
+                            ),
+                          ),
+                          Gap(15.h),
+                          EmailTextField(
+                            controller: _postalCode,
+                            hintText: 'Postal Code',
+                            keyboardType: TextInputType.number,
+                            prefixIcon: const Icon(
+                              Ionicons.location_sharp,
+                              color: kDark,
+                            ),
+                          ),
+                          Gap(8.h),
+                          Text(
+                            maxLines: 3,
+                            "Lưu ý: Một số khu vực không có mã bưu chính trong Google Maps.Bạn có thể tìm mã bưu chính trên các trang web như Tổng công ty Bưu điện Việt Nam.",
+                            style: appStyle(12, kGrayLight, FontWeight.w400),
+                          ),
+                          Gap(15.h),
+                          EmailTextField(
+                            controller: _instructions,
+                            hintText: 'Delivery Instructions',
+                            prefixIcon: const Icon(
+                              Ionicons.add_circle,
+                              color: kDark,
+                            ),
+                          ),
+                          CheckboxListTile(
+                            checkColor: kOffWhite,
+                            contentPadding: EdgeInsets.zero,
+                            activeColor: kPrimary,
+                            value: state.isDefault,
+                            onChanged: (value) {
+                              context.read<ShippingBloc>().add(
+                                  CheckDefaultAddressEvent(value ?? false));
+                            },
+                            title: const Text('Set as default address'),
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          Gap(15.h),
+                          CustomButton(
+                            onPressed: () {
+                              if (_searchController.text.isNotEmpty &&
+                                  _postalCode.text.isNotEmpty &&
+                                  _instructions.text.isNotEmpty) {
+                                context
+                                    .read<ShippingBloc>()
+                                    .add(AddShippingAddressEvent(address: {
+                                      "addressLine1": _searchController.text,
+                                      "postalCode": _postalCode.text,
+                                      "default": state.isDefault,
+                                      "deliveryInstructions":
+                                          _instructions.text,
+                                      "latitude": _selectedPosition!.latitude,
+                                      "longitude": _selectedPosition!.longitude
+                                    }));
+                              }else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Vui lòng nhập đủ thông tin địa chi ")),
+                                );
+                              }
+                            },
+                            btnHeight: 45.h,
+                            text: 'S U B M I T',
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ));
+        },
+      ),
     );
   }
 }

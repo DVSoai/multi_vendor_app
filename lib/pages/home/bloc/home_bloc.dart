@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:multi_vendor_app/data/models/hook_models/api_error.dart';
 import 'package:multi_vendor_app/data/models/hook_models/category/categories_model.dart';
 import 'package:multi_vendor_app/data/models/hook_models/food_model.dart';
+import 'package:multi_vendor_app/data/repositories/address/addresses_repository.dart';
 import 'package:multi_vendor_app/data/repositories/food/food_repository.dart';
 
 import '../../../core/network/source/exception.dart';
+import '../../../data/models/address/address_model.dart';
 import '../../../data/models/hook_models/restaurant_model.dart';
 import '../../../data/repositories/categories/category_repository.dart';
 part 'home_event.dart';
@@ -15,7 +17,8 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent,HomeState>{
   final CategoryRepositoryRemote _categoryRepositoryRemote;
   final FoodRepositoryRemote _foodRepositoryRemote;
-  HomeBloc(this._categoryRepositoryRemote,this._foodRepositoryRemote) : super(HomeState.initial()){
+  final AddressesRepositoryRemote _addressesRepositoryRemote;
+  HomeBloc(this._categoryRepositoryRemote,this._foodRepositoryRemote, this._addressesRepositoryRemote) : super(HomeState.initial()){
     on<UpdateCategories>((event, emit) {
       emit(state.copyWith(category: state.category));
     });
@@ -33,6 +36,9 @@ class HomeBloc extends Bloc<HomeEvent,HomeState>{
 
     // Get list restaurant
     on<GetRestaurantAll>(_onGetRestaurantAll);
+
+    // get address
+    on<LoadDefaultAddress>(_onLoadDefaultAddress);
   }
 
   Future<void>_getListCategories(GetListCategories event, Emitter<HomeState> emit) async {
@@ -86,6 +92,23 @@ class HomeBloc extends Bloc<HomeEvent,HomeState>{
   } on NetworkException catch(e){
     emit(state.copyWith(listFoods: [], title: e.message));
   }
+  }
+
+  Future<void> _onLoadDefaultAddress(LoadDefaultAddress event, Emitter<HomeState> emit) async {
+    try{
+      emit(state.copyWith(isLoading: true));
+      final result = await _addressesRepositoryRemote.getAddressesAll();
+      final defaultAddress = result.isNotEmpty
+          ? result.firstWhere(
+            (e) => e.addressModelDefault == true,
+        orElse: () => result.first,
+      )
+          : null;
+      emit(state.copyWith(defaultAddress: defaultAddress));
+      emit(state.copyWith(isLoading: false));
+    }on NetworkException catch(e){
+      emit(state.copyWith(defaultAddress: null, title: e.message));
+    }
   }
 
 }

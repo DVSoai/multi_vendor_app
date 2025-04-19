@@ -62,3 +62,10 @@ class ToggleAdditive extends FoodPageEvent {
   @override
   List<Object> get props => [index, isChecked];
 }
+
+class GetCartAdditives extends FoodPageEvent {
+
+  const GetCartAdditives();
+  @override
+  List<Object> get props => [];
+}

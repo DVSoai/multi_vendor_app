@@ -8,6 +8,7 @@ import 'package:multi_vendor_app/pages/auth/phone_verification/phone_verificatio
 import 'package:multi_vendor_app/pages/auth/register/bloc/register_bloc.dart';
 import 'package:multi_vendor_app/pages/auth/register/register_page.dart';
 import 'package:multi_vendor_app/pages/auth/widgets/login_redirect.dart';
+import 'package:multi_vendor_app/pages/cart/bloc/cart_bloc.dart';
 import 'package:multi_vendor_app/pages/cart/cart_page.dart';
 import 'package:multi_vendor_app/pages/categories/all_categories.dart';
 import 'package:multi_vendor_app/pages/categories/category_page.dart';
@@ -16,7 +17,9 @@ import 'package:multi_vendor_app/pages/food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/pages/home/bloc/home_bloc.dart';
 import 'package:multi_vendor_app/pages/home/widgets/fastest_food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/pages/home/widgets/nearby_restaurant/bloc/restaurant_bloc.dart';
-import 'package:multi_vendor_app/pages/profile/profile_page.dart';
+import 'package:multi_vendor_app/pages/order/order_page.dart';
+import 'package:multi_vendor_app/pages/profile/address/addresses_page.dart';
+import 'package:multi_vendor_app/pages/profile/address/bloc/address_bloc.dart';
 import 'package:multi_vendor_app/pages/profile/shipping/bloc/shipping_bloc.dart';
 import 'package:multi_vendor_app/pages/restaurant/bloc/restaurant_page_bloc.dart';
 import 'package:multi_vendor_app/pages/restaurant/restaurant_page.dart';
@@ -28,9 +31,11 @@ import '../core/di/locator.dart';
 import '../core/network/local/global_storage.dart';
 import '../data/models/hook_models/food_model.dart';
 import '../data/models/hook_models/restaurant_model.dart';
+import '../data/repositories/address/addresses_repository.dart';
 import '../data/repositories/auth/email_verification/email_verification_repository.dart';
 import '../data/repositories/auth/login/login_repository.dart';
 import '../data/repositories/auth/phone_verification/phone_verification_repository.dart';
+import '../data/repositories/cart/cart_repository.dart';
 import '../data/repositories/categories/category_repository.dart';
 import '../pages/auth/bloc/login_bloc.dart';
 import '../pages/auth/login/email_verification/bloc/email_verification_bloc.dart';
@@ -42,7 +47,7 @@ import '../pages/food/food_page.dart';
 import '../pages/home/widgets/fastest_food/all_fastest_foods.dart';
 import '../pages/home/widgets/nearby_restaurant/all_nearby_restaurants.dart';
 import '../pages/home/widgets/recommendations/recommendations.dart';
-import '../pages/profile/bloc/profile_bloc.dart';
+
 import '../pages/profile/shipping/shiping_address.dart';
 import '../pages/rating/rating_page.dart';
 import '../pages/splash/splash_screen.dart';
@@ -51,27 +56,6 @@ class AppRouters {
   static final GoRouter router = GoRouter(
       initialLocation: RouterName.rootScreen,
       routes: [
-        //-----------------------Root-----------------------
-        // GoRoute(
-        //   path: RouterName.rootScreen,
-        //   builder: (context, state) {
-        //     return BlocProvider(
-        //       create: (context) => TabIndexBloc(),
-        //       child: MainPage(),
-        //     );
-        //   },
-        // ),
-
-        GoRoute(
-          path: RouterName.mainPage,
-          builder: (context, state) {
-            return BlocProvider(
-              create: (context) => TabIndexBloc(),
-              child: MainPage(),
-            );
-          },
-        ),
-
         GoRoute(
           path: RouterName.emailVerification,
           name: RouterName.emailVerification,
@@ -93,9 +77,6 @@ class AppRouters {
             return const SplashScreen();
           }
         ),
-
-        //---------------Auth----------------
-
         GoRoute(
           path: RouterName.phoneVerification,
           name: RouterName.phoneVerification,
@@ -109,44 +90,13 @@ class AppRouters {
             );
           }
         ),
-
-
-        //---------------Category----------------
-        GoRoute(
-          path: RouterName.categoryScreen,
-          name: RouterName.categoryScreen,
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map;
-            final String category = extra['id'].toString();
-            final String title = extra['title'].toString();
-            return CustomTransitionPage(
-              child: BlocProvider(
-                create: (_) => HomeBloc(sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>()),
-                child: CategoryPage(category: category,title: title,),
-              ),
-              transitionDuration: const Duration(milliseconds: 500),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(-1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
-
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            );
-          },
-        ),
         GoRoute(
           path: RouterName.allCategoriesScreen,
           name: RouterName.allCategoriesScreen,
           pageBuilder: (context, state) {
             return CustomTransitionPage(
               child: BlocProvider(
-               create: (_) => HomeBloc(  sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>())..add(const GetListCategoriesAll()),
+               create: (_) => HomeBloc(  sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>(),sl<AddressesRepositoryRemote>())..add(const GetListCategoriesAll()),
                 child: const AllCategories(),
               ),
               transitionDuration: const Duration(milliseconds: 500),
@@ -165,38 +115,6 @@ class AppRouters {
             );
           },
         ),
-
-
-        //---------------Food----------------
-        GoRoute(
-          path: RouterName.foodPage,
-          name: RouterName.foodPage,
-          builder: (context,state){
-            final food = state.extra as FoodsModel;
-          return  BlocProvider(
-              create: (_) => FoodPageBloc(sl<RestaurantRepositoryRemote>())..add(FetchRestaurantList(code: food.restaurant)),
-              child:  FoodPage(food:food,),
-            );
-          }
-        ),
-
-
-        //---------------Restaurant----------------
-
-        GoRoute(
-            path: RouterName.restaurantPage,
-            name: RouterName.restaurantPage,
-            builder: (context, state) {
-              final restaurantModel = state.extra as RestaurantModel?;
-              return BlocProvider(
-                create: (_) => RestaurantPageBloc(sl<FoodRepositoryRemote>()),
-                child: RestaurantPage(restaurantModel:restaurantModel ,),
-              );
-            }
-        ),
-
-        //---------------Auth----------------
-
         GoRoute(
           path: RouterName.loginRedirect,
           name: RouterName.loginRedirect,
@@ -242,18 +160,110 @@ class AppRouters {
             );
           }
         ),
+        ShellRoute(
+          builder: (context, state, child) {
+           return MultiBlocProvider(
+               providers: [
+                  BlocProvider(
+                    create: (context) => CartBloc(
+                      sl<CartRepositoryRemote>(),
+                    )..add(const GetCartEvent()),
+                  ),
 
-        //---------------Bottom Navigation Bar----------------
+           ], child: Scaffold(
+             body: child,
+           )
+           );
+          },
+          routes: [
+            GoRoute(
+              path: RouterName.categoryScreen,
+              name: RouterName.categoryScreen,
+              pageBuilder: (context, state) {
+                final extra = state.extra as Map;
+                final String category = extra['id'].toString();
+                final String title = extra['title'].toString();
+                return CustomTransitionPage(
+                  child: BlocProvider(
+                    create: (_) => HomeBloc(sl<CategoryRepositoryRemote>(),sl<FoodRepositoryRemote>(),sl<AddressesRepositoryRemote>()),
+                    child: CategoryPage(category: category,title: title,),
+                  ),
+                  transitionDuration: const Duration(milliseconds: 500),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(-1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
 
-        //---------------HomePage----------------
-        // GoRoute(
-        //     path: RouterName.homeScreen,
-        //     builder: (context, state) {
-        //       return BlocProvider(
-        //         create: (_) => HomeBloc(),
-        //         child: const HomePage(),
-        //       );
-        //     }),
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+
+                    return SlideTransition(position: offsetAnimation, child: child);
+                  },
+                );
+              },
+            ),
+            GoRoute(
+                path: RouterName.restaurantPage,
+                name: RouterName.restaurantPage,
+                builder: (context, state) {
+                  final restaurantModel = state.extra as RestaurantModel?;
+                  return BlocProvider(
+                    create: (_) => RestaurantPageBloc(sl<FoodRepositoryRemote>()),
+                    child: RestaurantPage(restaurantModel:restaurantModel ,),
+                  );
+                }
+            ),
+            GoRoute(
+              path: RouterName.allFastestFood,
+              name: RouterName.allFastestFood,
+              pageBuilder: (context, state) {
+                return CustomTransitionPage(
+                  child: BlocProvider(
+                    create: (_) => FoodBloc(foodRepositoryRemote: sl<FoodRepositoryRemote>())..add(const GetAllFoods()),
+                    child: const AllFastestFoods(),
+                  ),
+                  transitionDuration: const Duration(milliseconds: 500),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+
+                    return SlideTransition(position: offsetAnimation, child: child);
+                  },
+                );
+              },
+            ),
+            GoRoute(
+                path: RouterName.foodPage,
+                name: RouterName.foodPage,
+                builder: (context,state){
+                  final food = state.extra as FoodsModel;
+                  return  BlocProvider(
+                    create: (_) => FoodPageBloc(sl<RestaurantRepositoryRemote>())..add(FetchRestaurantList(code: food.restaurant)),
+                    child:  FoodPage(food:food,),
+                  );
+                }
+            ),
+            GoRoute(
+              path: RouterName.mainPage,
+              builder: (context, state) {
+                return BlocProvider(
+                  create: (context) => TabIndexBloc(),
+                  child:  MainPage(),
+                );
+              },
+            ),
+
+
+          ]
+        ),
         GoRoute(
           path: RouterName.allNearbyRestaurants,
           name: RouterName.allNearbyRestaurants,
@@ -280,6 +290,17 @@ class AppRouters {
           },
         ),
         GoRoute(
+          path: RouterName.orderPage,
+          name: RouterName.orderPage,
+          builder: (context,state){
+            final restaurantModel = state.extra as RestaurantModel?;
+            return  OrderPage(
+              restaurant: restaurantModel,
+            );
+          }
+
+        ),
+        GoRoute(
           path: RouterName.recommendations,
           name: RouterName.recommendations,
           pageBuilder: (context, state) {
@@ -302,31 +323,6 @@ class AppRouters {
           },
         ),
 
-        GoRoute(
-          path: RouterName.allFastestFood,
-          name: RouterName.allFastestFood,
-          pageBuilder: (context, state) {
-            return CustomTransitionPage(
-              child: BlocProvider(
-                create: (_) => FoodBloc(foodRepositoryRemote: sl<FoodRepositoryRemote>())..add(const GetAllFoods()),
-                child: const AllFastestFoods(),
-              ),
-              transitionDuration: const Duration(milliseconds: 500),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
-
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            );
-          },
-        ),
 
         GoRoute(
             path: RouterName.searchScreen,
@@ -341,29 +337,28 @@ class AppRouters {
 
         //-----------------------Profile-----------------------
 
-        ShellRoute(
-          builder: (context, state, child) {
-           return MultiBlocProvider(
-               providers: [
-                  BlocProvider(
-                    create: (context) => ProfileBloc(
-                    ),
-                  ),
 
-           ], child: Scaffold(
-             body: child,
-           )
-           );
-          },
-          routes: [
-            GoRoute(
-                path: RouterName.shippingAddress,
-                name: RouterName.shippingAddress,
-                builder: (context,state){
-                  return const ShippingAddress();
-                }
-            ),
-          ]
+        GoRoute(
+            path: RouterName.shippingAddress,
+            name: RouterName.shippingAddress,
+            builder: (context,state){
+              return BlocProvider(
+                create:(context) => ShippingBloc(sl<AddressesRepositoryRemote>()) ,
+                child: const ShippingAddress(),
+              );
+            }
+        ),
+        GoRoute(
+          path: RouterName.addAddress,
+          name: RouterName.addAddress,
+          builder: (context,state){
+            return BlocProvider(
+              create: (context) =>AddressBloc(
+                sl<AddressesRepositoryRemote>(),
+              )..add(const GetAddressesEvent()),
+              child: const AddressesPage(),
+            );
+          }
         ),
 
 

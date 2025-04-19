@@ -26,23 +26,4 @@ class GetUserAddressEvent extends ProfileEvent {
   List<Object?> get props => [position];
 }
 
-// ✅ Sự kiện chuyển tab
-class ChangeTabEvent extends ProfileEvent {
-  final int tabIndex;
-
-  const ChangeTabEvent(this.tabIndex);
-
-  @override
-  List<Object?> get props => [tabIndex];
-}
-
-// ✅ Sự kiện kiểm tra địa chỉ mặc định
-class CheckDefaultAddressEvent extends ProfileEvent {
-  final bool isDefault;
-
-  const CheckDefaultAddressEvent(this.isDefault);
-
-  @override
-  List<Object?> get props => [isDefault];
-}
 

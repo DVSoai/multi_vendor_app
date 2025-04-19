@@ -3,10 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:multi_vendor_app/data/repositories/auth/email_verification/email_verification_repository.dart';
 import 'package:multi_vendor_app/data/repositories/auth/login/login_repository.dart';
 import 'package:multi_vendor_app/data/repositories/auth/register/register_repository.dart';
+import 'package:multi_vendor_app/data/repositories/cart/cart_repository.dart';
 import 'package:multi_vendor_app/data/repositories/categories/category_repository.dart';
 import 'package:multi_vendor_app/data/repositories/restaurant/restaurant_repository.dart';
 import 'package:multi_vendor_app/data/repositories/search/search_repository.dart';
 
+import '../../data/repositories/address/addresses_repository.dart';
 import '../../data/repositories/auth/phone_verification/phone_verification_repository.dart';
 import '../../data/repositories/food/food_repository.dart';
 import '../network/local/global_storage.dart';
@@ -38,5 +40,7 @@ class ServiceLocator {
     sl.registerFactory<RestaurantRepositoryRemote>(()=> RestaurantRepositoryRemote(sl<ApiClient>()));
     sl.registerFactory<EmailVerificationRepositoryRemote>(() => EmailVerificationRepositoryRemote(sl<ApiClient>()));
     sl.registerFactory<PhoneVerificationRepositoryRemote>(() => PhoneVerificationRepositoryRemote(sl<ApiClient>()));
+     sl.registerFactory<AddressesRepositoryRemote>(() => AddressesRepositoryRemote(sl<ApiClient>()));
+     sl.registerFactory<CartRepositoryRemote>(() => CartRepositoryRemote(sl<ApiClient>()));
   }
 }
