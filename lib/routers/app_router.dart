@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_vendor_app/data/models/order/order_request_model.dart';
 import 'package:multi_vendor_app/data/repositories/auth/register/register_repository.dart';
 import 'package:multi_vendor_app/data/repositories/food/food_repository.dart';
 import 'package:multi_vendor_app/data/repositories/restaurant/restaurant_repository.dart';
@@ -293,9 +294,15 @@ class AppRouters {
           path: RouterName.orderPage,
           name: RouterName.orderPage,
           builder: (context,state){
-            final restaurantModel = state.extra as RestaurantModel?;
+            final arguments = state.extra as Map;
+            final restaurantModel = arguments['restaurant'] as RestaurantModel;
+            final foodModel = arguments['food'] as FoodsModel;
+            final item = arguments['item'] as OrderItem;
+
             return  OrderPage(
               restaurant: restaurantModel,
+              foodModel: foodModel,
+              item: item,
             );
           }
 

@@ -11,6 +11,7 @@ import 'package:multi_vendor_app/data/repositories/search/search_repository.dart
 import '../../data/repositories/address/addresses_repository.dart';
 import '../../data/repositories/auth/phone_verification/phone_verification_repository.dart';
 import '../../data/repositories/food/food_repository.dart';
+import '../../data/repositories/orders/order_repository.dart';
 import '../network/local/global_storage.dart';
 import '../network/source/api.dart';
 
@@ -42,5 +43,6 @@ class ServiceLocator {
     sl.registerFactory<PhoneVerificationRepositoryRemote>(() => PhoneVerificationRepositoryRemote(sl<ApiClient>()));
      sl.registerFactory<AddressesRepositoryRemote>(() => AddressesRepositoryRemote(sl<ApiClient>()));
      sl.registerFactory<CartRepositoryRemote>(() => CartRepositoryRemote(sl<ApiClient>()));
+     sl.registerFactory<OrderRepositoryRemote>(() => OrderRepositoryRemote(sl<ApiClient>()));
   }
 }

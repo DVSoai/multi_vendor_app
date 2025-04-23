@@ -16,8 +16,8 @@ class ApiClient {
   ApiClient(this._dio, this._globalStorage) {
     _dio.options = BaseOptions(
       baseUrl:
-      // 'http://192.168.1.5:6013',
-      'http://192.168.2.31:6013', // Set your base URL
+      'http://192.168.1.30:6013',
+      // 'http://192.168.2.31:6013', // Set your base URL
       connectTimeout: const Duration(seconds: 10), // Timeout for connecting
       receiveTimeout: const Duration(seconds: 10), // Timeout for receiving data
     );

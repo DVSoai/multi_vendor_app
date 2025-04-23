@@ -13,6 +13,7 @@ import 'package:multi_vendor_app/core/constants/constants.dart';
 import 'package:multi_vendor_app/data/models/cart/cart_request_model.dart';
 import 'package:multi_vendor_app/data/models/hook_models/food_model.dart';
 import 'package:multi_vendor_app/data/models/hook_models/restaurant_model.dart';
+import 'package:multi_vendor_app/data/models/order/order_request_model.dart';
 import 'package:multi_vendor_app/pages/food/bloc/food_bloc.dart';
 import 'package:multi_vendor_app/routers/routers_name.dart';
 
@@ -324,10 +325,26 @@ class _FoodPageState extends State<FoodPage> {
                               } else if (user?.phoneVerification == false) {
                                 showVerificationSheet(context);
                               } else {
+                                final double price = double.parse(
+                                    ((widget.food.price + state.totalPrice!) *
+                                            state.count!)
+                                        .toStringAsFixed(2));
+                                OrderItem item = OrderItem(
+                                  foodId: widget.food.id,
+                                  quantity: state.count!,
+                                  price: price,
+                                  additives: state.additiveTitle!,
+                                  instructions: preferenceController.text,
+                                );
                                 final RestaurantModel? argument =
                                     state.restaurant;
+                                final FoodsModel food = widget.food;
                                 context.push(RouterName.orderPage,
-                                    extra: argument);
+                                    extra: {
+                                  'restaurant': argument,
+                                  'food': food,
+                                  'item': item,
+                                });
                               }
                             },
                             child: Padding(
